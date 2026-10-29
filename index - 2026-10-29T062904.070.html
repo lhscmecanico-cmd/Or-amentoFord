@@ -1,0 +1,1772 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>OficinaPro 5.0</title>
+  <meta name="theme-color" content="#1a73e8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{--primary:#1a73e8;--primary-dark:#174ea6;--success:#1e8e3e;--warning:#f9ab00;--error:#ea4335;--purple:#a142f4;--cyan:#039be5;--slate:#5f6368;--bg:#f1f3f4;--surface:#fff;--border:#e8eaed;--text:#202124;--text-light:#5f6368;--text-lighter:#9aa0a6;--radius:16px;--shadow-sm:0 1px 2px rgba(32,33,36,.10),0 1px 3px 1px rgba(32,33,36,.08);--shadow-md:0 2px 6px 2px rgba(32,33,36,.15)}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    body{font-family:Roboto,'Google Sans',system-ui,sans-serif;background:linear-gradient(180deg,#8ab4f8 0%,#aecbfa 40%,#d2e3fc 100%) fixed;color:var(--text);min-height:100vh;padding-bottom:24px}
+    button{font:inherit;cursor:pointer}input,select,textarea{font:inherit}
+    .hidden{display:none!important}
+    body.login-active .app-shell{display:none}
+    body:not(.login-active) .auth-shell{display:none}
+    .app-shell{max-width:470px;margin:0 auto;padding:0 12px}
+    .auth-shell{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 20px}
+    .auth-container{width:100%;max-width:390px;background:#fff;border-radius:24px;padding:32px 26px 26px;box-shadow:0 12px 40px rgba(32,33,36,.22);animation:authFade .3s ease}
+    @keyframes authFade{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .auth-brand{text-align:center;margin-bottom:24px}
+    .auth-logo{display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,#1a73e8,#1e8e3e);color:#fff;font-size:2rem;font-weight:800;box-shadow:0 4px 14px rgba(26,115,232,.35);margin-bottom:10px}
+    .auth-title{font-family:'Google Sans',sans-serif;font-size:1.5rem;font-weight:700;color:var(--text);margin-bottom:4px}
+    .auth-sub{font-size:.85rem;color:var(--text-light);font-weight:500}
+    .auth-form{display:grid;gap:14px}
+    .auth-group{display:grid;gap:6px}
+    .auth-label{font-size:.82rem;font-weight:500;color:var(--text-light)}
+    .auth-input{width:100%;border:1.5px solid #dadce0;border-radius:10px;padding:14px 15px;font-size:.95rem;background:#fff;color:var(--text);outline:0;transition:border-color .15s,box-shadow .15s}
+    .auth-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,115,232,.16)}
+    .auth-input-wrap{position:relative}
+    .auth-toggle-pass{position:absolute;top:50%;right:12px;transform:translateY(-50%);border:none;background:transparent;color:var(--text-lighter);font-size:1rem;padding:4px}
+    .btn-login{width:100%;border:none;border-radius:12px;padding:14px;background:var(--primary);color:#fff;font-family:'Google Sans',sans-serif;font-size:1rem;font-weight:600;box-shadow:0 2px 8px rgba(26,115,232,.35);transition:background .15s,box-shadow .15s;margin-top:4px}
+    .btn-login:hover:not(:disabled){background:var(--primary-dark);box-shadow:0 4px 12px rgba(26,115,232,.4)}
+    .btn-login:disabled{opacity:.7;cursor:not-allowed}
+    .auth-error{background:#fce8e6;color:#c5221f;border-radius:10px;padding:10px 14px;font-size:.82rem;font-weight:600;display:none}
+    .auth-error.show{display:block}
+    .app-header{position:sticky;top:10px;z-index:100;margin:10px 0 12px;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:20px;padding:12px 16px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-sm)}
+    .app-header h1{font-family:'Google Sans',sans-serif;font-size:1.1rem;font-weight:600;color:var(--text);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .icon-btn{width:40px;height:40px;border-radius:50%;border:none;background:transparent;color:var(--text-light);display:inline-flex;align-items:center;justify-content:center;transition:background .15s}
+    .icon-btn:hover{background:rgba(32,33,36,.08)}
+    .icon-btn svg{width:20px;height:20px}
+    .clock{font-size:.8rem;color:var(--text-light);font-variant-numeric:tabular-nums}
+    .page{display:none;animation:fadeIn .25s ease}
+    .page.active{display:block}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .hero{padding:4px 4px 12px}
+    .hero h2{font-family:'Google Sans',sans-serif;font-size:1.6rem;font-weight:700;line-height:1.15;letter-spacing:-.02em}
+    .hero .year{font-size:.72rem;color:var(--primary);font-weight:700;vertical-align:super;margin-right:4px}
+    .hero .name{color:var(--primary)}
+    .timer-card{background:linear-gradient(135deg,#24c1e0 0%,#0b8aa5 100%);color:#fff;border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:0 4px 14px rgba(11,138,165,.4)}
+    .timer-card-header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px}
+    .timer-card-title{font-family:'Google Sans',sans-serif;font-size:1.05rem;font-weight:700;display:flex;align-items:center;gap:8px}
+    .timer-card-link{font-size:.72rem;background:rgba(255,255,255,.25);border:none;color:#fff;padding:6px 11px;border-radius:20px;font-weight:600;transition:background .15s;white-space:nowrap}
+    .timer-card-link:hover{background:rgba(255,255,255,.38)}
+    .timer-body{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .timer-input{flex:1 1 100%;padding:11px 14px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.95);color:var(--text);border-radius:10px;font-size:.95rem;font-weight:600;text-align:center}
+    .timer-input:focus{outline:none;box-shadow:0 0 0 3px rgba(255,255,255,.5)}
+    .timer-result{flex:1 1 auto;text-align:center;min-width:90px}
+    .timer-result-val{font-family:'Google Sans',sans-serif;font-size:1.5rem;font-weight:800;line-height:1.1}
+    .timer-result-ext{font-size:.72rem;opacity:.9;margin-top:2px}
+    .timer-btn{flex-shrink:0;width:46px;height:46px;border-radius:12px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.95);color:#0b8aa5;font-size:1.15rem;display:flex;align-items:center;justify-content:center;transition:transform .1s,background .15s}
+    .timer-btn:hover:not(:disabled){background:#fff}
+    .timer-btn:active:not(:disabled){transform:scale(.94)}
+    .timer-btn:disabled{opacity:.4;cursor:not-allowed}
+    .timer-btn.running{background:#fa7b17;border-color:#fa7b17;color:#fff;animation:timerPulse 1.4s ease-in-out infinite}
+    .timer-btn.running.warning{background:#f9a825;border-color:#f9a825}
+    .timer-btn.ringing{background:#d32f2f;border-color:#d32f2f;color:#fff;animation:timerRing .6s ease-in-out infinite}
+    .timer-btn.paused{background:#eceff1!important;border-color:#90a4ae!important;color:#37474f!important;animation:none!important}
+    @keyframes timerPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+    @keyframes timerRing{0%,100%{transform:rotate(0) scale(1)}25%{transform:rotate(-12deg) scale(1.1)}75%{transform:rotate(12deg) scale(1.1)}}
+    .timer-horarios{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:10px;font-size:.72rem;font-weight:600}
+    .timer-status{margin-top:10px;font-size:.82rem;font-weight:700;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+    .menu-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+    .menu-tile{border:none;border-radius:16px;padding:16px 14px;min-height:96px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;color:#fff;text-align:left;box-shadow:0 3px 8px rgba(0,0,0,.15);transition:transform .15s}
+    .menu-tile:hover{transform:translateY(-2px)}
+    .menu-tile .icon{font-size:1.6rem;line-height:1;margin-bottom:6px}
+    .menu-tile .title{font-family:'Google Sans',sans-serif;font-size:.95rem;font-weight:700}
+    .menu-tile .sub{font-size:.72rem;opacity:.9;margin-top:2px;font-weight:400}
+    .tile-orcamentos{background:linear-gradient(135deg,#4285f4,#1a56c4)}
+    .tile-historico{background:linear-gradient(135deg,#ea4335,#b31412)}
+    .tile-calc-salario{background:linear-gradient(135deg,#fbbc04,#e37400);color:#202124}
+    .menu-tile-wide{grid-column:1/-1;flex-direction:row;align-items:center;gap:14px;padding:16px 20px;min-height:76px}
+    .menu-tile-wide .icon{font-size:2rem;margin-bottom:0}
+    .menu-tile-wide .title{font-size:1.05rem}
+    .menu-tile-wide .sub{font-size:.78rem;margin-top:2px}
+    .menu-small-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
+    .menu-tile-sm{border:none;border-radius:12px;padding:10px 14px;min-height:52px;display:flex;align-items:center;gap:10px;color:#fff;text-align:left;box-shadow:0 2px 5px rgba(0,0,0,.12);transition:transform .15s}
+    .menu-tile-sm:hover{transform:translateY(-1px)}
+    .menu-tile-sm .icon{font-size:1.2rem;line-height:1}
+    .menu-tile-sm .title{font-family:'Google Sans',sans-serif;font-size:.85rem;font-weight:700}
+    .tile-config{background:linear-gradient(135deg,#5f6368,#3c4043)}
+    .tile-backup{background:linear-gradient(135deg,#a142f4,#6a1fb8)}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:16px;margin-bottom:12px}
+    .card-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+    .card-title{display:flex;align-items:center;gap:10px;font-family:'Google Sans',sans-serif;font-size:1rem;font-weight:600;color:var(--text)}
+    .card-title-icon{width:34px;height:34px;border-radius:10px;background:#d2e3fc;display:inline-flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+    .badge-soft{background:#d2e3fc;color:var(--primary-dark);padding:6px 10px;border-radius:20px;font-size:.75rem;font-weight:500;white-space:nowrap}
+    .form-grid{display:grid;gap:14px}
+    .form-group{display:grid;gap:6px;position:relative}
+    .form-label{font-size:.82rem;font-weight:500;color:var(--text-light)}
+    .form-input,.form-select,.form-textarea{width:100%;border:1px solid #dadce0;background:#fff;color:var(--text);border-radius:8px;padding:13px 15px;font-size:.9rem;outline:0;transition:border-color .15s,box-shadow .15s}
+    .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(26,115,232,.18)}
+    .form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .btn{border:none;border-radius:20px;padding:11px 20px;font-family:'Google Sans',sans-serif;font-size:.875rem;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:box-shadow .15s,background .15s;flex:1 1 140px}
+    .btn:hover{box-shadow:0 2px 6px rgba(32,33,36,.2)}
+    .btn-primary{background:var(--primary);color:#fff;box-shadow:0 1px 3px rgba(26,115,232,.3)}
+    .btn-primary:hover{background:var(--primary-dark)}
+    .btn-secondary{background:#fff;color:var(--text);border:1px solid #dadce0}
+    .btn-danger{background:var(--error);color:#fff;border:none;font-weight:700;padding:13px 20px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;box-shadow:0 2px 8px rgba(234,67,53,.3);transition:background .15s,box-shadow .15s}
+    .btn-danger:hover:not(:disabled){background:#c5221f;box-shadow:0 4px 12px rgba(234,67,53,.4)}
+    .btn-danger:disabled{opacity:.7;cursor:not-allowed}
+    .danger-zone{background:#fce8e6;border:1px solid #f5b7b1;border-radius:12px;padding:14px 16px;margin-top:6px}
+    .danger-zone-title{font-size:.9rem;font-weight:800;color:#b31412;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+    .danger-zone-hint{font-size:.76rem;color:#7f1d1d;line-height:1.5;margin-bottom:12px}
+    .danger-count-badge{display:inline-block;background:rgba(234,67,53,.18);color:#b31412;border-radius:999px;padding:1px 8px;font-size:.72rem;font-weight:900;margin-left:4px}
+    .placeholder-list{display:grid;gap:10px}
+    .placeholder-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;position:relative}
+    .placeholder-title{font-weight:700;color:var(--text);margin-bottom:4px;font-size:.92rem}
+    .placeholder-sub{color:var(--text-light);font-size:.82rem;line-height:1.5}
+    .tag-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+    .tag{padding:4px 10px;border-radius:20px;background:#d2e3fc;color:var(--primary-dark);font-size:.74rem;font-weight:500}
+    .empty-state{text-align:center;padding:28px 16px;color:var(--text-light);font-size:.85rem}
+    .empty-icon{font-size:2rem;opacity:.55;margin-bottom:8px}
+    .custom-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-md);z-index:200;max-height:240px;overflow-y:auto;display:none}
+    .custom-dropdown.open{display:block}
+    .cd-opt{padding:11px 14px;cursor:pointer;display:flex;flex-direction:column;gap:2px;border-bottom:1px solid var(--border)}
+    .cd-opt:last-child{border-bottom:none}
+    .cd-opt:hover{background:rgba(66,133,244,.08)}
+    .cd-opt-main{font-size:.88rem;font-weight:700;color:var(--text)}
+    .cd-opt-sub{font-size:.74rem;color:var(--text-light)}
+    .cd-empty{padding:14px;color:var(--text-lighter);text-align:center;font-size:.82rem}
+    .orc-added-header{display:flex;align-items:center;gap:8px;padding:8px 4px;font-size:.78rem;font-weight:800;color:var(--primary-dark);text-transform:uppercase;letter-spacing:.05em}
+    .orc-count-badge{background:rgba(26,115,232,.12);color:var(--primary-dark);border-radius:999px;padding:1px 9px;font-size:.76rem;font-weight:900}
+    .orc-totals{display:flex;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px dashed var(--border);font-weight:800;font-size:.95rem}
+    .orc-footer{display:flex;justify-content:center;gap:16px;margin-top:20px}
+    .footer-icon-btn{width:84px;height:80px;border-radius:20px;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:1.4rem;color:#fff;box-shadow:0 3px 8px rgba(0,0,0,.18);transition:transform .15s}
+    .footer-icon-btn:hover{transform:translateY(-2px)}
+    .footer-icon-btn .btn-label{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.02em}
+    .btn-share{background:linear-gradient(135deg,#0e7490,#164e63)}
+    .btn-save-only{background:linear-gradient(135deg,#34a853,#1e8e3e)}
+    .btn-save-clear{background:linear-gradient(135deg,#5f6368,#3c4043)}
+    .action-icon{width:30px;height:30px;border-radius:8px;border:none;background:#f1f3f4;color:var(--text);display:inline-flex;align-items:center;justify-content:center;font-size:.85rem;transition:background .15s}
+    .action-icon:hover{background:#e8eaed}
+    .status-bar{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:calc(100% - 24px);max-width:430px;z-index:1500;pointer-events:none;display:flex;justify-content:center}
+    .status-pill{background:#202124;color:#fff;padding:12px 16px;border-radius:20px;font-family:'Google Sans',sans-serif;font-size:.82rem;font-weight:500;box-shadow:var(--shadow-md);opacity:0;transform:translateY(10px);transition:opacity .25s,transform .25s}
+    .status-pill.show{opacity:1;transform:translateY(0)}
+    .modal-overlay{position:fixed;inset:0;z-index:900;background:rgba(32,33,36,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px}
+    .modal-overlay.bottom{align-items:flex-end;padding:0}
+    .modal-sheet{background:#fff;border-radius:24px;padding:24px 20px;width:100%;max-width:420px;box-shadow:0 12px 40px rgba(0,0,0,.22);animation:sheetUp .25s cubic-bezier(.34,1.56,.64,1);max-height:88vh;display:flex;flex-direction:column}
+    .modal-overlay.bottom .modal-sheet{border-radius:28px 28px 0 0;max-width:470px}
+    @keyframes sheetUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+    .modal-title{font-family:'Google Sans',sans-serif;font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:6px;text-align:center}
+    .modal-sub{font-size:.82rem;color:var(--text-light);text-align:center;margin-bottom:18px}
+    .modal-icon{font-size:2rem;text-align:center;margin-bottom:8px}
+    .modal-btns{display:flex;gap:10px;margin-top:16px}
+    .modal-btns .btn{flex:1}
+    .p-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow-sm)}
+    .p-page-title{font-family:'Google Sans',sans-serif;font-size:1rem;font-weight:700;color:var(--text);margin-bottom:4px}
+    .p-hint{font-size:.78rem;color:var(--text-light);line-height:1.5}
+    .p-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+    .p-tab{padding:7px 14px;border-radius:20px;font-size:.8rem;font-weight:500;border:1px solid #dadce0;background:#fff;color:var(--text-light);cursor:pointer;transition:all .15s}
+    .p-tab.active{background:var(--primary);color:#fff;border-color:transparent}
+    .p-ctx-label{font-size:.78rem;color:var(--primary);font-weight:600;margin-bottom:14px}
+    .p-input-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+    .p-input-lbl{flex:1;font-size:.88rem;color:#3c4043;line-height:1.4}
+    .p-input-lbl small{display:block;font-size:.72rem;color:var(--text-lighter)}
+    .p-input-row input[type=number]{width:84px;text-align:center;border:1.5px solid #dadce0;border-radius:10px;padding:8px 6px;font-size:.9rem;font-weight:600;color:var(--text)}
+    .p-input-row input[type=number]:focus{outline:none;border-color:var(--primary)}
+    .p-section{font-size:.82rem;font-weight:800;color:var(--text);text-transform:uppercase;letter-spacing:.04em;margin:14px 0 8px}
+    .p-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+    .p-metric-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px}
+    .p-label{font-size:.72rem;color:var(--text-light);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+    .p-value{font-family:'Google Sans',sans-serif;font-size:1.4rem;font-weight:700;line-height:1.1}
+    .p-value.c-ok{color:var(--success)}.p-value.c-warn{color:#e37400}.p-value.c-low{color:#c5221f}
+    .p-formula{font-size:.68rem;color:var(--text-lighter);margin-top:4px;font-style:italic}
+    .p-sub{font-size:.74rem;margin-top:3px;font-weight:600}
+    .p-bar-wrap{position:relative;height:10px;background:#e8eaed;border-radius:99px;overflow:hidden;margin:4px 0}
+    .p-bar-fill{height:100%;border-radius:99px;transition:width .3s}
+    .p-bar-ok{background:#1e8e3e}.p-bar-warn{background:#f9ab00}.p-bar-low{background:#ea4335}
+    .p-bar-mark{position:absolute;top:0;left:71.4%;width:2px;height:100%;background:#202124;opacity:.25}
+    .p-action{border-radius:12px;padding:12px;margin-bottom:10px;border-left:3px solid}
+    .p-action-ok{background:#e6f4ea;border-color:#1e8e3e}
+    .p-action-low{background:#fce8e6;border-color:#ea4335}
+    .p-action-warn{background:#fef0c7;border-color:#f9ab00}
+    .p-action-title{font-size:.88rem;font-weight:700;margin-bottom:4px}
+    .p-action-title.c-ok{color:var(--success)}
+    .p-action-title.c-warn{color:#e37400}
+    .p-action-title.c-low{color:#c5221f}
+    .p-action-text{font-size:.82rem;color:#202124;line-height:1.55}
+    .analise-total-card{background:linear-gradient(135deg,#1a73e8,#174ea6);color:#fff;border-radius:16px;padding:18px;text-align:center;margin-top:12px;box-shadow:0 3px 10px rgba(26,115,232,.35)}
+    .analise-kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+    .analise-kpi-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:4px}
+    .analise-kpi-icon{font-size:1.2rem}
+    .analise-kpi-val{font-family:'Google Sans',sans-serif;font-size:1.1rem;font-weight:700;color:var(--text)}
+    .analise-kpi-label{font-size:.72rem;font-weight:600;color:var(--text-light)}
+    @media (max-width:380px){
+      .hero h2{font-size:1.35rem}
+      .menu-tile{min-height:88px;padding:14px 12px}
+      .menu-tile .icon{font-size:1.4rem}
+      .menu-tile .title{font-size:.88rem}
+      .menu-tile .sub{font-size:.68rem}
+      .menu-tile-sm .title{font-size:.78rem}
+    }
+  </style>
+</head>
+<body class="login-active">
+
+  <section class="auth-shell" id="authShell">
+    <div class="auth-container">
+      <div class="auth-brand">
+        <div class="auth-logo">🔧</div>
+        <div class="auth-title">OficinaPro</div>
+        <div class="auth-sub">Acesse com sua conta</div>
+      </div>
+      <form class="auth-form" id="loginForm" autocomplete="off">
+        <div class="auth-group">
+          <label class="auth-label" for="loginEmail">E‑mail</label>
+          <input class="auth-input" id="loginEmail" name="email" type="email" placeholder="seu@email.com" autocomplete="email" required />
+        </div>
+        <div class="auth-group">
+          <label class="auth-label" for="loginSenha">Senha</label>
+          <div class="auth-input-wrap">
+            <input class="auth-input" id="loginSenha" name="senha" type="password" placeholder="Sua senha" autocomplete="current-password" required />
+            <button class="auth-toggle-pass" type="button" id="loginTogglePass" aria-label="Mostrar senha">👁️</button>
+          </div>
+        </div>
+        <div class="auth-error" id="loginError"></div>
+        <button class="btn-login" type="submit" id="loginSubmit">Entrar</button>
+      </form>
+    </div>
+  </section>
+
+  <div class="app-shell">
+    <header class="app-header">
+      <button class="icon-btn hidden" id="btnBack" aria-label="Voltar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <h1 id="headerTitle">Início</h1>
+      <span class="clock" id="headerClock">--:--</span>
+    </header>
+
+    <section class="page active" id="page-dashboard">
+      <div class="hero">
+        <h2><span class="year" id="heroYear">2026</span>Bem vindo, <span class="name" id="heroName">Usuário</span></h2>
+      </div>
+
+      <div class="timer-card">
+        <div class="timer-card-header">
+          <div class="timer-card-title"><span>⏱️</span><span>Calculadora de Tempo</span></div>
+        </div>
+        <div class="timer-body">
+          <input class="timer-input" id="ctInput" type="number" step="0.01" inputmode="decimal" placeholder="Digite em horas. Ex: 1.5" autocomplete="off" />
+          <div class="timer-result">
+            <div class="timer-result-val" id="ctValor">0:00 h</div>
+            <div class="timer-result-ext" id="ctExtenso">0 min no total</div>
+          </div>
+          <button class="timer-btn hidden" id="ctPauseBtn" title="Pausar">⏸️</button>
+          <button class="timer-btn hidden" id="ctFinishBtn" title="Finalizar e salvar">✅</button>
+          <button class="timer-btn" id="ctTimerBtn" title="Iniciar temporizador" disabled>⏰</button>
+        </div>
+        <div class="timer-horarios hidden" id="ctHorarios">
+          <span id="ctHoraInicio"></span>
+          <span id="ctHoraFim"></span>
+        </div>
+        <div class="timer-status hidden" id="ctTimerStatus"></div>
+      </div>
+
+      <div class="menu-grid">
+        <button class="menu-tile tile-orcamentos" data-go="orcamentos"><span class="icon">🧾</span><div><div class="title">Orçamento</div><div class="sub">Criar novo</div></div></button>
+        <button class="menu-tile tile-historico" data-go="historico"><span class="icon">📂</span><div><div class="title">Histórico</div><div class="sub">Meus orçamentos</div></div></button>
+        <button class="menu-tile menu-tile-wide tile-calc-salario" data-go="calc-salario"><span class="icon">💵</span><div><div class="title">Calculadora de Salário</div></div></button>
+      </div>
+
+      <div class="menu-small-grid">
+        <button class="menu-tile-sm tile-config" data-go="config"><span class="icon">⚙️</span><span class="title">Configuração</span></button>
+        <button class="menu-tile-sm tile-backup" data-go="backup"><span class="icon">💾</span><span class="title">Backup</span></button>
+      </div>
+    </section>
+
+    <section class="page" id="page-orcamentos">
+      <article class="card">
+        <div class="card-title-row">
+          <div class="card-title">
+            <span class="card-title-icon">🧾</span>
+            <span>Novo orçamento</span>
+            <button class="icon-btn" id="btnEditSetup" title="Editar OS/Veículo" style="width:28px;height:28px;display:none;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </button>
+          </div>
+        </div>
+        <div id="orcInfoBar" class="hidden" style="background:rgba(26,115,232,.08);border:1px solid rgba(26,115,232,.16);border-radius:12px;padding:10px 14px;margin-bottom:14px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+          <span class="tag" id="orcInfoOs" style="background:#d2e3fc;"></span>
+          <span class="tag" id="orcInfoVeiculo" style="background:#d2e3fc;"></span>
+        </div>
+        <div class="form-grid">
+          <input type="hidden" id="orcOsNumero" />
+          <input type="hidden" id="orcVeiculoInput" />
+          <div class="form-group">
+            <label class="form-label">Item / Produto / Kit</label>
+            <input class="form-input" id="orcServicoInput" placeholder="Digite para buscar item, produto ou kit..." autocomplete="off" />
+            <div id="dropdownOrcServico" class="custom-dropdown"></div>
+          </div>
+          <div id="orcListaServicosAdicionados" class="placeholder-list" style="margin-top:4px;"></div>
+          <div class="orc-totals">
+            <div>Tempo total: <span id="orcTotalTempo">0</span></div>
+            <div>Mão de obra: <span id="orcTotalValor">R$ 0,00</span></div>
+          </div>
+          <div class="orc-footer">
+            <button class="footer-icon-btn btn-share" id="btnOrcShare" title="Compartilhar no WhatsApp"><span>📲</span><span class="btn-label">Compartilhar</span></button>
+            <button class="footer-icon-btn btn-save-only" id="btnOrcSaveOnly" title="Salvar orçamento"><span>💾</span><span class="btn-label">Salvar</span></button>
+            <button class="footer-icon-btn btn-save-clear" id="btnOrcSaveClear" title="Salvar e criar novo"><span>📄</span><span class="btn-label">Salvar + Novo</span></button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="page" id="page-historico">
+      <article class="card">
+        <div class="card-title-row">
+          <div class="card-title"><span class="card-title-icon">📚</span><span>Meus orçamentos</span></div>
+          <span class="badge-soft" id="histCount">0</span>
+        </div>
+        <div style="margin-bottom:12px;position:relative;">
+          <input class="form-input" id="historicoSearch" placeholder="Buscar por OS, veículo ou serviço..." autocomplete="off" style="padding-right:36px;" />
+          <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:1rem;pointer-events:none;">🔍</span>
+        </div>
+        <div id="historicoSearchInfo" style="font-size:.72rem;color:var(--text-lighter);margin-bottom:10px;"></div>
+        <div id="listaHistorico" class="placeholder-list">
+          <div class="empty-state"><div class="empty-icon">📂</div><div>Nenhum orçamento salvo</div></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="page" id="page-produtividade">
+      <div class="p-card">
+        <div class="p-page-title">📊 Produtividade da Oficina</div>
+        <p class="p-hint" style="margin-bottom:1rem;">Utilização, eficiência e produtividade com as fórmulas do Manual de Pós-Venda Ford.</p>
+        <div style="font-size:.72rem;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Período de análise</div>
+        <div class="p-tabs">
+          <button class="p-tab active" data-mode="dia-sem">📅 Dia útil</button>
+          <button class="p-tab" data-mode="semana">🗓️ Semana</button>
+          <button class="p-tab" data-mode="mes">📆 Mês</button>
+        </div>
+        <div class="p-ctx-label" id="pCtxLabel"></div>
+        <div id="pInputsArea"></div>
+      </div>
+      <div id="pResultsArea"></div>
+    </section>
+
+    <section class="page" id="page-calc-salario">
+      <article class="card">
+        <div class="card-title-row"><div class="card-title"><span class="card-title-icon">💵</span><span>Cálculo de Salário</span></div></div>
+        <p class="p-hint" style="margin-bottom:14px;">Valor produzido = valor inserido manualmente por você e sincronizado com sua conta.<br><strong>IR:</strong> isento para salário bruto abaixo de R$ 5.000,00. Acima disso, 15%.</p>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Valor Produzido (R$) — faturamento do mês (manual)</label>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <input class="form-input" id="calcSalValorProduzido" type="text" inputmode="decimal" placeholder="0,00" autocomplete="off" value="0,00" style="flex:1;" />
+              <button type="button" id="btnResetValorProduzido" title="Limpar valor" style="flex-shrink:0;width:42px;height:42px;border:1px solid var(--border);border-radius:12px;background:rgba(26,115,232,.08);color:var(--primary);font-size:1.05rem;cursor:pointer;">🔄</button>
+            </div>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group"><label class="form-label">Dias Trabalhados</label><input class="form-input" id="calcSalDias" type="number" placeholder="Ex: 22" /></div>
+            <div class="form-group"><label class="form-label">Dias de Descanso</label><input class="form-input" id="calcSalDescanso" type="number" placeholder="Ex: 8" /></div>
+            <div class="form-group"><label class="form-label">Salário Fixo (R$)</label><input class="form-input" id="calcSalFixo" type="number" step="0.01" placeholder="0,00" /></div>
+            <div class="form-group"><label class="form-label">Comissão (%)</label><input class="form-input" id="calcSalComissao" type="number" step="0.1" placeholder="0,0" /></div>
+            <div class="form-group"><label class="form-label">Imposto NF (%)</label><input class="form-input" id="calcSalImposto" type="number" step="0.1" placeholder="Ex: 5" /></div>
+            <div class="form-group"><label class="form-label">Adiantamento (R$)</label><input class="form-input" id="calcSalAdiant" type="number" step="0.01" placeholder="0,00" /></div>
+            <div class="form-group"><label class="form-label">Plano de Saúde (R$)</label><input class="form-input" id="calcSalPlano" type="number" step="0.01" placeholder="0,00" /></div>
+            <div class="form-group"><label class="form-label">Outros (R$)</label><input class="form-input" id="calcSalOutros" type="number" step="0.01" placeholder="0,00" /></div>
+          </div>
+        </div>
+        <div class="analise-total-card">
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;opacity:.85;">💰 Salário Líquido</div>
+          <div id="calcSalLiquido" style="font-size:1.9rem;font-weight:900;margin-top:4px;">R$ 0,00</div>
+        </div>
+        <div class="analise-kpi-grid">
+          <div class="analise-kpi-card"><span class="analise-kpi-icon">📈</span><span class="analise-kpi-val" id="calcSalBruto">R$ 0,00</span><span class="analise-kpi-label">Salário Bruto</span></div>
+          <div class="analise-kpi-card"><span class="analise-kpi-icon">📉</span><span class="analise-kpi-val" id="calcSalDescontos">R$ 0,00</span><span class="analise-kpi-label">Descontos</span></div>
+          <div class="analise-kpi-card"><span class="analise-kpi-icon">🏛️</span><span class="analise-kpi-val" id="calcSalIR">R$ 0,00</span><span class="analise-kpi-label">IR</span></div>
+          <div class="analise-kpi-card"><span class="analise-kpi-icon">🏦</span><span class="analise-kpi-val" id="calcSalINSS">R$ 0,00</span><span class="analise-kpi-label">INSS (11%)</span></div>
+          <div class="analise-kpi-card"><span class="analise-kpi-icon">📅</span><span class="analise-kpi-val" id="calcSalDiario">R$ 0,00</span><span class="analise-kpi-label">Ganho Diário</span></div>
+          <div class="analise-kpi-card"><span class="analise-kpi-icon">🧾</span><span class="analise-kpi-val" id="calcSalTotal">R$ 0,00</span><span class="analise-kpi-label">Total</span></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="page" id="page-config">
+      <article class="card">
+        <div class="card-title-row"><div class="card-title"><span class="card-title-icon">⚙️</span><span>Configuração</span></div></div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Conta conectada</label>
+            <div style="display:flex;gap:8px;align-items:center;padding:12px 14px;background:#f8f9fa;border:1px solid var(--border);border-radius:10px;">
+              <span style="font-size:1.3rem;">👤</span>
+              <div style="flex:1;min-width:0;">
+                <div id="cfgEmail" style="font-size:.9rem;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</div>
+                <div id="cfgUidInfo" style="font-size:.7rem;color:var(--text-lighter);font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</div>
+              </div>
+              <button class="btn" id="btnLogout" style="flex-shrink:0;padding:8px 14px;background:#fce8e6;color:#c5221f;border-radius:16px;font-size:.78rem;font-weight:600;">Sair</button>
+            </div>
+            <p class="p-hint" id="cfgUidStatus" style="font-size:.72rem;"></p>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nome exibido</label>
+            <div style="display:flex;gap:8px;">
+              <input class="form-input" id="cfgNome" placeholder="Seu nome" style="flex:1;" />
+              <button class="btn btn-primary" id="btnSalvarNome" style="flex-shrink:0;padding:11px 16px;">Salvar</button>
+            </div>
+            <p class="p-hint" style="font-size:.68rem;">Vinculado à sua conta — sincronizado em todos os aparelhos.</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Valor da Mão de Obra (R$/h)</label>
+            <div style="display:flex;gap:8px;">
+              <input class="form-input" id="cfgMaoDeObra" type="number" step="0.01" placeholder="Ex: 2.50" style="flex:1;" />
+              <button class="btn btn-primary" id="btnSalvarMaoDeObra" style="flex-shrink:0;padding:11px 16px;">Salvar</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Meta de Faturamento Mensal (R$)</label>
+            <div style="display:flex;gap:8px;">
+              <input class="form-input" id="cfgMeta" type="number" step="0.01" min="0" placeholder="Ex: 50000" style="flex:1;" />
+              <button class="btn btn-primary" id="btnSalvarMeta" style="flex-shrink:0;padding:11px 16px;">Salvar</button>
+            </div>
+          </div>
+
+          <div class="danger-zone">
+            <div class="danger-zone-title">⚠️ Zona de Perigo</div>
+            <div class="danger-zone-hint">
+              Exclui permanentemente <strong>todos os seus orçamentos salvos</strong>
+              <span class="danger-count-badge" id="dangerHistCount">0</span>.
+              Esta ação não pode ser desfeita.
+            </div>
+            <button class="btn-danger" id="btnExcluirTodosOrcamentos">🗑️ Excluir todos os orçamentos</button>
+          </div>
+
+          <div style="padding:12px;background:#e8f0fe;border-radius:10px;border:1px solid #c5d9f9;font-size:.78rem;line-height:1.5;color:#174ea6;">
+            🔐 <strong>Sessão automática:</strong> o Firebase mantém você conectado entre recarregamentos. O catálogo é compartilhado entre os usuários; histórico, configurações e a calculadora salarial são individuais por conta.
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="page" id="page-backup">
+      <article class="card">
+        <div class="card-title-row">
+          <div class="card-title"><span class="card-title-icon">💾</span><span>Backup e restauração</span></div>
+          <span class="badge-soft">JSON</span>
+        </div>
+        <div class="form-grid">
+          <div style="font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);">🗄️ Backup JSON</div>
+          <div class="btn-row">
+            <button id="btnExportJson" class="btn btn-primary">⬇️ Exportar JSON</button>
+            <label for="importJsonFile" class="btn btn-secondary" style="display:inline-block;text-align:center;cursor:pointer;">⬆️ Importar JSON</label>
+            <input type="file" id="importJsonFile" accept=".json" style="display:none;" />
+          </div>
+          <div class="p-hint">Exporta todos os seus dados: veículos, serviços, kits, itens, peças, produtos, histórico, registros e sessões de tempo.</div>
+          <div id="backupInfo" style="display:none;padding:12px;border-radius:10px;font-size:.82rem;font-weight:600;"></div>
+        </div>
+      </article>
+    </section>
+  </div>
+
+  <div class="modal-overlay hidden" id="orcSetupModal">
+    <div class="modal-sheet">
+      <div class="modal-icon">🧾</div>
+      <div class="modal-title">Novo Orçamento</div>
+      <div class="modal-sub">Informe a OS e o veículo para começar</div>
+      <div class="form-row-2" style="margin-bottom:14px;">
+        <div class="form-group">
+          <label class="form-label">Nº OS</label>
+          <input class="form-input" id="setupOs" type="number" placeholder="Ex: 1025" />
+        </div>
+        <div class="form-group" style="position:relative;">
+          <label class="form-label">Veículo</label>
+          <input class="form-input" id="setupVeiculo" placeholder="Buscar..." autocomplete="off" />
+          <div id="setupVeiculoDrop" class="custom-dropdown"></div>
+        </div>
+      </div>
+      <div class="modal-btns">
+        <button class="btn btn-secondary" id="btnCancelSetup">Cancelar</button>
+        <button class="btn btn-primary" id="btnConfirmSetup" disabled>Começar ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay bottom hidden" id="aprovModal">
+    <div class="modal-sheet">
+      <div class="modal-title">🏁 Finalizar OS</div>
+      <div class="modal-sub" id="aprovSub">Selecione os serviços aprovados</div>
+      <div id="aprovList" style="overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;margin:12px 0;"></div>
+      <div class="modal-btns">
+        <button class="btn btn-secondary" id="btnCancelAprov">Cancelar</button>
+        <button class="btn btn-primary" id="btnConfirmAprov">✅ Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden" id="excluirTodosModal">
+    <div class="modal-sheet">
+      <div class="modal-icon">⚠️</div>
+      <div class="modal-title">Excluir todos os orçamentos</div>
+      <div class="modal-sub">Digite sua senha de acesso para confirmar. <strong>Todos os orçamentos serão apagados permanentemente.</strong></div>
+      <div class="form-group">
+        <div style="position:relative;">
+          <input class="form-input" id="excluirSenha" type="password" placeholder="Sua senha de acesso" autocomplete="off" style="padding-right:44px;" />
+          <button type="button" id="toggleExcluirSenha" style="position:absolute;top:50%;right:12px;transform:translateY(-50%);border:none;background:transparent;color:var(--text-lighter);font-size:1rem;cursor:pointer;">👁️</button>
+        </div>
+      </div>
+      <div id="excluirSenhaError" style="display:none;color:var(--error);font-size:.8rem;font-weight:600;margin-top:10px;text-align:center;"></div>
+      <div class="modal-btns">
+        <button class="btn btn-secondary" id="btnCancelExcluirTodos">Cancelar</button>
+        <button class="btn" id="btnConfirmExcluirTodos" style="background:#ea4335;color:#fff;">🗑️ Excluir tudo</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-bar"><div class="status-pill" id="statusPill">Pronto</div></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, doc, onSnapshot, getDocs, getDoc, setDoc, addDoc, deleteDoc, query, orderBy, where, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    const firebaseConfig = { apiKey:"AIzaSyDDzAJR1k7TK9pYmjs97gaLC1sEUUQFMrA", authDomain:"oficinapro-c6231.firebaseapp.com", projectId:"oficinapro-c6231", storageBucket:"oficinapro-c6231.firebasestorage.app", messagingSenderId:"959323042007", appId:"1:959323042007:web:ebc011bc5a67e19ef60092" };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    /* ===== LOCAIS DE SINCRONIZAÇÃO (mesmos do sistema principal "123") =====
+       CATÁLOGO (compartilhado entre TODOS os usuários):
+         usuarios/{CATALOGO_UID}/{veiculos|servicos|kits|itens|pecas|produtos|servicosSimples}
+       INDIVIDUAL (por usuário):
+         usuarios/{uid}/{historico|registros|consultores|calcTempoHistorico}
+         usuarios/{uid}/configuracao/geral        (nome, maoDeObra, meta)
+         usuarios/{uid}/rascunhos/calcSalario     (calculadora salarial)
+       CATALOGO_UID = UID da conta dona do catálogo mestre. Vazio = cada usuário usa o próprio catálogo. */
+    const CATALOGO_UID = '';
+    const CATALOGO_COLS = ['veiculos','servicos','kits','itens','pecas','produtos','servicosSimples'];
+    const isCatalogCol = c => CATALOGO_COLS.includes(c);
+    const catalogOwnerUid = uid => CATALOGO_UID || uid;
+    const colRefFor = (uid, colName) => collection(db, 'usuarios', isCatalogCol(colName) ? catalogOwnerUid(uid) : uid, colName);
+    const DEVICE_ID = Math.random().toString(36).slice(2) + Date.now().toString(36);
+
+    const CT_HIST_KEY='oficina_pro_calc_tempo_hist_v1';
+
+    const _lsKey = (uid, field) => `oficina_pro_${field}_${uid}`;
+    const _lsGet = (uid, field) => { try { return localStorage.getItem(_lsKey(uid, field)); } catch(e){ return null; } };
+    const _lsSet = (uid, field, val) => { try { localStorage.setItem(_lsKey(uid, field), String(val)); } catch(e){} };
+
+    const AppState = {
+      uid: null, userEmail: null,
+      userName: 'Usuário',
+      maoDeObra: 2.5,
+      meta: 0,
+      activePage: 'dashboard',
+      cache: { veiculos:[], servicos:[], kits:[], historico:[], registros:[], consultores:[], pecas:[], produtos:[], itens:[], servicosSimples:[], calcTempoHistorico:[] },
+      realtime: {}, editingHistoricoId: null
+    };
+    const Orc = { servicosAdicionados: [], pecasPainelAberto: {} };
+
+    const els = {
+      pages: document.querySelectorAll('.page'),
+      headerTitle: document.getElementById('headerTitle'),
+      btnBack: document.getElementById('btnBack'),
+      statusPill: document.getElementById('statusPill'),
+      heroName: document.getElementById('heroName'),
+      heroYear: document.getElementById('heroYear'),
+      headerClock: document.getElementById('headerClock'),
+      orcOsNumero: document.getElementById('orcOsNumero'),
+      orcVeiculoInput: document.getElementById('orcVeiculoInput'),
+      orcServicoInput: document.getElementById('orcServicoInput'),
+      dropdownOrcServico: document.getElementById('dropdownOrcServico'),
+      orcListaServicos: document.getElementById('orcListaServicosAdicionados'),
+      orcTotalTempo: document.getElementById('orcTotalTempo'),
+      orcTotalValor: document.getElementById('orcTotalValor'),
+      orcInfoBar: document.getElementById('orcInfoBar'),
+      orcInfoOs: document.getElementById('orcInfoOs'),
+      orcInfoVeiculo: document.getElementById('orcInfoVeiculo'),
+      btnEditSetup: document.getElementById('btnEditSetup'),
+      listaHistorico: document.getElementById('listaHistorico'),
+      historicoSearch: document.getElementById('historicoSearch'),
+      historicoSearchInfo: document.getElementById('historicoSearchInfo'),
+      histCount: document.getElementById('histCount')
+    };
+
+    function showStatus(msg, dur = 2400) {
+      els.statusPill.textContent = msg;
+      els.statusPill.classList.add('show');
+      clearTimeout(showStatus._t);
+      showStatus._t = setTimeout(() => els.statusPill.classList.remove('show'), dur);
+    }
+    const fmtBRL = v => 'R$ ' + (Number(v) || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+    const parseMoedaBR = v => {
+      if (v == null) return 0;
+      let s = String(v).trim().replace(/[R$\s]/g, '');
+      if (!s) return 0;
+      if (s.includes(',')) s = s.replace(/\./g, '').replace(',', '.');
+      const n = parseFloat(s);
+      return isNaN(n) ? 0 : n;
+    };
+    const formatMoedaBR = v => {
+      const n = Number(v) || 0;
+      return n.toFixed(2).replace('.', ',').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+    };
+    const fmtTempo = v => { const n = parseFloat(v) || 0; if (n === 0) return '0'; return n % 1 === 0 ? String(Math.round(n)) : parseFloat(n.toFixed(2)).toString().replace('.', ','); };
+    const parseDecimalBR = v => { if (v == null) return 0; const n = parseFloat(String(v).trim().replace(',', '.')); return isNaN(n) ? 0 : n; };
+    const normalizeText = t => (t || '').toString().trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const pecaNome = p => typeof p === 'string' ? p : (p?.nome || '');
+    const normalizarPecas = pecas => (pecas || []).filter(p => p != null && String(typeof p === 'string' ? p : (p.nome || '')).trim() !== '').map(p => typeof p === 'string' ? { nome: p.trim(), quantidade: 1 } : { nome: (p.nome || '').trim(), quantidade: p.quantidade || 1 });
+    const itemDescricao = it => {
+      if (it.descricao) return it.descricao;
+      if (it.nome) return it.nome;
+      const comps = it.componentes || [];
+      const serv = comps.find(c => typeof c === 'object' && c.tipo === 'servico');
+      if (serv) { const q = serv.quantidade || 1; return (q > 1 ? q + 'x ' : '') + pecaNome(serv); }
+      return comps.map(c => { const q = c.quantidade || 1; return (q > 1 ? q + 'x ' : '') + pecaNome(c); }).join(', ') || '—';
+    };
+    const _isMine = item => !item.criadoPor || item.criadoPor === AppState.uid;
+
+    const TITLES = { dashboard:'Início', orcamentos:'Novo orçamento', historico:'Histórico', produtividade:'Produtividade', 'calc-salario':'Cálculo de salário', config:'Configuração', backup:'Backup' };
+
+    function setActivePage(name) {
+      AppState.activePage = name;
+      els.pages.forEach(p => p.classList.toggle('active', p.id === 'page-' + name));
+      els.headerTitle.textContent = TITLES[name] || 'Início';
+      els.btnBack.classList.toggle('hidden', name === 'dashboard');
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      if (name === 'orcamentos') onEnterOrcamentos();
+      if (name === 'historico') renderHistorico();
+      if (name === 'produtividade') renderProdutividade();
+      if (name === 'config') renderConfig();
+    }
+    window.setActivePage = setActivePage;
+    els.btnBack.addEventListener('click', () => setActivePage('dashboard'));
+    document.querySelectorAll('[data-go]').forEach(el => el.addEventListener('click', () => setActivePage(el.dataset.go)));
+
+    /* ===== AUTH ===== */
+    const loginForm = document.getElementById('loginForm');
+    const loginEmail = document.getElementById('loginEmail');
+    const loginSenha = document.getElementById('loginSenha');
+    const loginError = document.getElementById('loginError');
+    const loginSubmit = document.getElementById('loginSubmit');
+    const loginTogglePass = document.getElementById('loginTogglePass');
+
+    loginTogglePass.addEventListener('click', () => {
+      const isPass = loginSenha.type === 'password';
+      loginSenha.type = isPass ? 'text' : 'password';
+      loginTogglePass.textContent = isPass ? '🙈' : '👁️';
+    });
+
+    function authMsgFromError(code) {
+      const map = { 'auth/invalid-email':'E‑mail inválido.', 'auth/user-disabled':'Conta desativada.', 'auth/user-not-found':'Usuário não encontrado.', 'auth/wrong-password':'Senha incorreta.', 'auth/invalid-credential':'E‑mail ou senha incorretos.', 'auth/invalid-login-credentials':'E‑mail ou senha incorretos.', 'auth/too-many-requests':'Muitas tentativas. Aguarde um pouco.', 'auth/network-request-failed':'Falha de rede. Verifique sua conexão.' };
+      return map[code] || 'Não foi possível entrar. Tente novamente.';
+    }
+
+    loginForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      loginError.classList.remove('show');
+      const email = loginEmail.value.trim();
+      const senha = loginSenha.value;
+      if (!email || !senha) { loginError.textContent = 'Preencha e‑mail e senha.'; loginError.classList.add('show'); return; }
+      loginSubmit.disabled = true;
+      loginSubmit.textContent = 'Entrando...';
+      try {
+        await setPersistence(auth, browserLocalPersistence);
+        await signInWithEmailAndPassword(auth, email, senha);
+      } catch (err) {
+        loginError.textContent = authMsgFromError(err.code);
+        loginError.classList.add('show');
+        loginSubmit.disabled = false;
+        loginSubmit.textContent = 'Entrar';
+      }
+    });
+
+    async function doLogout() {
+      if (!confirm('Sair da conta? Você precisará fazer login novamente.')) return;
+      try { await signOut(auth); } catch (e) { showStatus('Erro ao sair: ' + e.message); }
+    }
+    document.getElementById('btnLogout').addEventListener('click', doLogout);
+
+    function showLogin() {
+      document.body.classList.add('login-active');
+      loginSubmit.disabled = false;
+      loginSubmit.textContent = 'Entrar';
+      loginError.classList.remove('show');
+      Object.values(AppState.realtime).forEach(u => { try { u && u(); } catch (e) {} });
+      Object.keys(AppState.realtime).forEach(k => delete AppState.realtime[k]);
+      AppState.uid = null; AppState.userEmail = null;
+      AppState.userName = 'Usuário';
+      AppState.maoDeObra = 2.5;
+      AppState.meta = 0;
+      els.heroName.textContent = 'Usuário';
+      AppState.cache = { veiculos:[], servicos:[], kits:[], historico:[], registros:[], consultores:[], pecas:[], produtos:[], itens:[], servicosSimples:[], calcTempoHistorico:[] };
+      Orc.servicosAdicionados = []; Orc.pecasPainelAberto = {}; AppState.editingHistoricoId = null;
+      // reset defensivo do estado da calc. salário
+      CS_FIELDS.forEach(f => { if (cs[f]) cs[f].value = ''; });
+      _vProdNum = 0;
+      if (cs.valorProd) cs.valorProd.value = '0,00';
+      calcularSalario();
+    }
+
+    async function carregarConfigUsuario(uid) {
+      const lsNome = _lsGet(uid, 'nome');
+      const lsMao = _lsGet(uid, 'mao_obra');
+      const lsMeta = _lsGet(uid, 'meta');
+      AppState.userName = lsNome || 'Usuário';
+      AppState.maoDeObra = parseFloat(lsMao) || 2.5;
+      AppState.meta = parseFloat(lsMeta) || 0;
+      els.heroName.textContent = AppState.userName;
+
+      try {
+        const snap = await getDoc(doc(db, 'usuarios', uid, 'configuracao', 'geral'));
+        if (snap.exists()) aplicarConfigRemota(uid, snap.data());
+      } catch (e) { console.warn('Erro ao carregar config do Firestore:', e); }
+    }
+
+    function aplicarConfigRemota(uid, d) {
+      if (!d || uid !== AppState.uid) return;
+      let changed = false;
+      if (d.nome != null && d.nome !== AppState.userName) { AppState.userName = d.nome; _lsSet(uid, 'nome', d.nome); changed = true; }
+      if (d.maoDeObra != null) {
+        const v = parseFloat(d.maoDeObra) || 2.5;
+        if (v !== AppState.maoDeObra) { AppState.maoDeObra = v; _lsSet(uid, 'mao_obra', v); changed = true; }
+      }
+      if (d.meta != null) {
+        const v = parseFloat(d.meta) || 0;
+        if (v !== AppState.meta) { AppState.meta = v; _lsSet(uid, 'meta', v); changed = true; }
+      }
+      if (changed) {
+        els.heroName.textContent = AppState.userName;
+        if (AppState.activePage === 'config') renderConfig();
+      }
+    }
+
+    async function enterApp(user) {
+      AppState.uid = user.uid;
+      AppState.userEmail = user.email;
+      document.body.classList.remove('login-active');
+
+      // reset defensivo do estado da calc. salário para o usuário novo
+      _vProdNum = 0;
+      if (cs.valorProd) cs.valorProd.value = '0,00';
+      CS_FIELDS.forEach(f => { if (cs[f]) cs[f].value = ''; });
+
+      els.heroYear.textContent = new Date().getFullYear();
+      document.getElementById('cfgEmail').textContent = user.email || '—';
+      document.getElementById('cfgUidInfo').textContent = 'UID: ' + user.uid;
+
+      await carregarConfigUsuario(user.uid);
+      await carregarCalcSalario(user.uid);
+      await startListeners();
+      setActivePage('dashboard');
+
+      showStatus('✅ Bem-vindo, ' + AppState.userName + '!');
+    }
+
+    setPersistence(auth, browserLocalPersistence).catch(() => {});
+    onAuthStateChanged(auth, user => { if (user) enterApp(user); else showLogin(); });
+
+    /* ===== LISTENERS ===== */
+    function startListeners() {
+      if (!AppState.uid) return Promise.resolve();
+      const uid = AppState.uid;
+      const watch = (colName, orderField, dir = 'asc') => {
+        try {
+          const col = colRefFor(uid, colName);
+          const q = orderField ? query(col, orderBy(orderField, dir)) : col;
+          const unsub = onSnapshot(q, snap => {
+            AppState.cache[colName] = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            if (colName === 'historico' && AppState.activePage === 'historico') renderHistorico();
+            if (colName === 'veiculos' || colName === 'historico') renderConfig();
+          }, e => {
+            console.warn('[' + colName + ']', e);
+            if (isCatalogCol(colName) && CATALOGO_UID && e && e.code === 'permission-denied' && !startListeners._catErr) {
+              startListeners._catErr = true;
+              showStatus('⚠️ Sem permissão para ler o catálogo compartilhado', 4500);
+            }
+          });
+          AppState.realtime[colName] = unsub;
+        } catch (e) { console.warn(e); }
+      };
+      startListeners._catErr = false;
+      // catálogo (compartilhado)
+      watch('veiculos', 'nome'); watch('servicos', 'descricao'); watch('kits'); watch('itens'); watch('pecas', 'nome'); watch('produtos', 'nome'); watch('servicosSimples', 'nome');
+      // individual (por usuário)
+      watch('consultores', 'nome'); watch('historico', 'data', 'desc'); watch('registros', 'data', 'desc'); watch('calcTempoHistorico', 'inicioISO', 'desc');
+
+      // configurações individuais em tempo real (configuracao/geral)
+      try {
+        AppState.realtime.configGeral = onSnapshot(doc(db, 'usuarios', uid, 'configuracao', 'geral'),
+          snap => { if (snap.exists()) aplicarConfigRemota(uid, snap.data()); },
+          e => console.warn('[configuracao/geral]', e));
+      } catch (e) { console.warn(e); }
+
+      // calculadora salarial em tempo real (rascunhos/calcSalario)
+      try {
+        AppState.realtime.calcSalario = onSnapshot(doc(db, 'usuarios', uid, 'rascunhos', 'calcSalario'), snap => {
+          if (!snap.exists()) return;
+          const d = snap.data() || {};
+          if (d.deviceId && d.deviceId === DEVICE_ID) return;
+          let localUpd = null;
+          try { const raw = _lsGet(uid, 'calc_sal'); localUpd = raw ? (JSON.parse(raw).updatedAt || null) : null; } catch (e) {}
+          if (localUpd && d.updatedAt && d.updatedAt <= localUpd) return;
+          aplicarCalcSalarioRemoto(uid, d);
+        }, e => console.warn('[rascunhos/calcSalario]', e));
+      } catch (e) { console.warn(e); }
+      return Promise.resolve();
+    }
+
+    /* ===== TIMER ===== */
+    const Timer = { state:'idle', endTs:null, durationMs:0, minutosOrig:0, countdownId:null, alarmId:null, remainingMs:0, avisoDisparado:false, horaInicio:null, horaFim:null, tipoFim:null, rodadoMs:null };
+    const ctEl = { input: document.getElementById('ctInput'), valor: document.getElementById('ctValor'), extenso: document.getElementById('ctExtenso'), timerBtn: document.getElementById('ctTimerBtn'), pauseBtn: document.getElementById('ctPauseBtn'), finishBtn: document.getElementById('ctFinishBtn'), horarios: document.getElementById('ctHorarios'), horaInicio: document.getElementById('ctHoraInicio'), horaFim: document.getElementById('ctHoraFim'), status: document.getElementById('ctTimerStatus') };
+
+    function ctFmt(ms) { const s = Math.max(0, Math.round(ms / 1000)); const m = Math.floor(s / 60); const seg = s % 60; return m + ':' + String(seg).padStart(2, '0'); }
+    function ctHora(d) { return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
+
+    function ctUpdateResult() {
+      const raw = (ctEl.input.value || '').replace(',', '.').trim();
+      const dec = parseFloat(raw);
+      if (!raw || isNaN(dec) || dec <= 0) { ctEl.valor.textContent = '0:00 h'; ctEl.extenso.textContent = '0 min no total'; if (Timer.state === 'idle') ctEl.timerBtn.disabled = true; return 0; }
+      const totalMin = Math.round(dec * 60);
+      const h = Math.floor(totalMin / 60), m = totalMin % 60;
+      ctEl.valor.textContent = `${h}:${String(m).padStart(2, '0')} h`;
+      ctEl.extenso.textContent = `${totalMin} min no total`;
+      if (Timer.state === 'idle') ctEl.timerBtn.disabled = totalMin <= 0;
+      return totalMin;
+    }
+
+    function ctBeep() {
+      try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        const ctx = new Ctx();
+        [{t:0,d:0.3},{t:0.4,d:0.3},{t:0.8,d:0.5}].forEach(n => {
+          const osc = ctx.createOscillator(), gain = ctx.createGain();
+          osc.type = 'sine'; osc.frequency.value = 880;
+          const t0 = ctx.currentTime + n.t;
+          gain.gain.setValueAtTime(0.001, t0); gain.gain.exponentialRampToValueAtTime(0.35, t0 + 0.02); gain.gain.exponentialRampToValueAtTime(0.001, t0 + n.d);
+          osc.connect(gain).connect(ctx.destination); osc.start(t0); osc.stop(t0 + n.d);
+        });
+        setTimeout(() => { try { ctx.close(); } catch(e){} }, 2000);
+      } catch (e) {}
+    }
+    function ctBeepLight() { try { const Ctx=window.AudioContext||window.webkitAudioContext; const ctx=new Ctx(); const osc=ctx.createOscillator(), gain=ctx.createGain(); osc.type='sine'; osc.frequency.value=660; const t=ctx.currentTime; gain.gain.setValueAtTime(0.001,t); gain.gain.exponentialRampToValueAtTime(0.25,t+0.02); gain.gain.exponentialRampToValueAtTime(0.001,t+0.3); osc.connect(gain).connect(ctx.destination); osc.start(t); osc.stop(t+0.3); setTimeout(()=>{try{ctx.close()}catch(e){}},500);} catch(e){} }
+    function ctNotif(title, opts) { if (!('Notification' in window) || Notification.permission !== 'granted') return; try { new Notification(title, opts); } catch (e) {} }
+    function ctPedirNotif() { if (!('Notification' in window)) return; if (Notification.permission === 'default') Notification.requestPermission().catch(() => {}); }
+
+    function ctAplicarVisual() {
+      ctEl.timerBtn.classList.remove('running','ringing','warning');
+      ctEl.pauseBtn.classList.remove('paused');
+      if (Timer.state === 'idle') {
+        ctEl.timerBtn.textContent = '⏰'; ctEl.timerBtn.title = 'Iniciar temporizador';
+        ctEl.timerBtn.disabled = ctUpdateResult() <= 0;
+        ctEl.status.classList.add('hidden'); ctEl.status.textContent = '';
+        ctEl.pauseBtn.classList.add('hidden'); ctEl.finishBtn.classList.add('hidden');
+      } else if (Timer.state === 'counting') {
+        ctEl.timerBtn.textContent = '⏳'; ctEl.timerBtn.title = 'Cancelar'; ctEl.timerBtn.disabled = false;
+        ctEl.timerBtn.classList.add('running');
+        ctEl.status.classList.remove('hidden');
+        ctEl.pauseBtn.classList.remove('hidden'); ctEl.pauseBtn.textContent = '⏸️';
+        ctEl.finishBtn.classList.remove('hidden');
+      } else if (Timer.state === 'paused') {
+        ctEl.timerBtn.textContent = '⏳'; ctEl.timerBtn.title = 'Cancelar'; ctEl.timerBtn.disabled = false;
+        ctEl.status.classList.remove('hidden');
+        const pct = Timer.durationMs > 0 ? Math.round((1 - Timer.remainingMs / Timer.durationMs) * 100) : 0;
+        ctEl.status.innerHTML = `<span>⏸️ ${ctFmt(Timer.remainingMs)} · ${pct}%</span><span>🏁 ~${ctHora(new Date(Date.now() + Timer.remainingMs))}</span>`;
+        ctEl.pauseBtn.classList.remove('hidden'); ctEl.pauseBtn.classList.add('paused'); ctEl.pauseBtn.textContent = '▶️';
+        ctEl.finishBtn.classList.remove('hidden');
+      } else if (Timer.state === 'ringing') {
+        ctEl.timerBtn.textContent = '🔔'; ctEl.timerBtn.title = 'Parar alarme'; ctEl.timerBtn.disabled = false;
+        ctEl.timerBtn.classList.add('ringing');
+        ctEl.status.classList.remove('hidden'); ctEl.status.textContent = '🔔 Tempo esgotado — toque no relógio para parar';
+        ctEl.pauseBtn.classList.add('hidden'); ctEl.finishBtn.classList.add('hidden');
+      }
+    }
+
+    function ctUpdateHorarios() {
+      if (!Timer.horaInicio) { ctEl.horarios.classList.add('hidden'); return; }
+      ctEl.horarios.classList.remove('hidden');
+      ctEl.horaInicio.textContent = `▶️ Início ${ctHora(Timer.horaInicio)}`;
+      if (Timer.horaFim) {
+        const rot = { pausa:'⏸️ Pausa', fim:'🏁 Fim', cancelado:'🛑 Cancelado' }[Timer.tipoFim] || '⏸️';
+        let txt = `${rot} ${ctHora(Timer.horaFim)}`;
+        if (Timer.rodadoMs >= 0) { const min = Math.round(Timer.rodadoMs / 60000); txt += ` · ${min} min rodados`; }
+        ctEl.horaFim.textContent = txt;
+      } else { ctEl.horaFim.textContent = ''; }
+    }
+
+    function ctRegistrar() {
+      if (!Timer.horaInicio || !Timer.rodadoMs) return;
+      const entry = { id: Timer.horaInicio.toISOString(), inicioISO: Timer.horaInicio.toISOString(), fimISO: (Timer.horaFim || new Date()).toISOString(), tipo: Timer.tipoFim || 'fim', duracaoMs: Timer.rodadoMs, minutosConfigurados: Timer.minutosOrig || null };
+      try {
+        const list = JSON.parse(localStorage.getItem(CT_HIST_KEY) || '[]');
+        const idx = list.findIndex(x => x.id === entry.id);
+        if (idx >= 0) list[idx] = entry; else list.push(entry);
+        list.sort((a, b) => new Date(b.inicioISO) - new Date(a.inicioISO));
+        localStorage.setItem(CT_HIST_KEY, JSON.stringify(list));
+      } catch (e) {}
+      if (AppState.uid) { const { id, ...data } = entry; setDoc(doc(db, 'usuarios', AppState.uid, 'calcTempoHistorico', id), data, { merge: true }).catch(e => console.warn(e)); }
+    }
+
+    function ctIniciar(min) {
+      if (min <= 0) return;
+      ctPedirNotif();
+      Timer.durationMs = min * 60000; Timer.endTs = Date.now() + Timer.durationMs;
+      Timer.minutosOrig = min; Timer.avisoDisparado = false; Timer.state = 'counting';
+      Timer.horaInicio = new Date(); Timer.horaFim = null; Timer.tipoFim = null; Timer.rodadoMs = null;
+      ctUpdateHorarios(); ctAplicarVisual(); ctUpdateStatus();
+      Timer.countdownId = setInterval(ctUpdateStatus, 1000);
+    }
+    function ctUpdateStatus() {
+      if (Timer.state !== 'counting' || !Timer.endTs) return;
+      const rest = Timer.endTs - Date.now();
+      if (rest <= Timer.durationMs * 0.05) { clearInterval(Timer.countdownId); Timer.countdownId = null; ctIniciarAlarme(); return; }
+      const avisoLim = Math.min(Timer.durationMs * 0.2, 300000);
+      if (!Timer.avisoDisparado && rest <= avisoLim) { Timer.avisoDisparado = true; ctEl.timerBtn.classList.add('warning'); ctBeepLight(); if (navigator.vibrate) navigator.vibrate(200); }
+      const pct = Math.round((1 - rest / Timer.durationMs) * 100);
+      ctEl.status.innerHTML = `<span>${Timer.avisoDisparado ? '⚠️' : '⏳'} ${ctFmt(rest)} · ${pct}%</span><span>🏁 ${ctHora(new Date(Date.now() + rest))}</span>`;
+    }
+    function ctIniciarAlarme() {
+      Timer.state = 'ringing'; Timer.horaFim = new Date(); Timer.tipoFim = 'fim'; Timer.rodadoMs = Timer.durationMs;
+      ctRegistrar(); ctUpdateHorarios(); ctAplicarVisual();
+      let cycles = 0;
+      const fire = () => {
+        ctBeep();
+        if (navigator.vibrate) navigator.vibrate([400, 150, 400, 150, 400]);
+        if (cycles % 2 === 0) ctNotif('⏰ Temporizador concluído', { body: 'Toque no relógio para parar.', requireInteraction: true });
+        cycles++;
+      };
+      if (Timer.alarmId) clearInterval(Timer.alarmId);
+      fire(); Timer.alarmId = setInterval(fire, 1500);
+    }
+    function ctPararAlarme() { if (Timer.alarmId) clearInterval(Timer.alarmId); Timer.alarmId = null; Timer.state = 'idle'; ctAplicarVisual(); }
+    function ctCancelar() {
+      if (Timer.horaInicio) {
+        const rest = Timer.state === 'counting' && Timer.endTs ? Math.max(0, Timer.endTs - Date.now()) : Timer.remainingMs;
+        Timer.horaFim = new Date(); Timer.tipoFim = 'cancelado'; Timer.rodadoMs = Math.max(0, Timer.durationMs - rest);
+        ctRegistrar();
+      }
+      clearInterval(Timer.countdownId); Timer.countdownId = null;
+      Timer.endTs = null; Timer.state = 'idle'; Timer.remainingMs = 0;
+      ctUpdateHorarios(); ctAplicarVisual();
+    }
+    function ctPausar() {
+      if (Timer.state !== 'counting') return;
+      Timer.remainingMs = Math.max(0, Timer.endTs - Date.now());
+      clearInterval(Timer.countdownId); Timer.countdownId = null;
+      Timer.endTs = null; Timer.state = 'paused';
+      Timer.horaFim = new Date(); Timer.tipoFim = 'pausa'; Timer.rodadoMs = Timer.durationMs - Timer.remainingMs;
+      ctUpdateHorarios(); ctAplicarVisual();
+    }
+    function ctRetomar() {
+      if (Timer.state !== 'paused') return;
+      Timer.endTs = Date.now() + Timer.remainingMs;
+      Timer.state = 'counting';
+      ctAplicarVisual(); ctUpdateStatus();
+      Timer.countdownId = setInterval(ctUpdateStatus, 1000);
+    }
+    function ctFinalizar() {
+      if (Timer.state !== 'counting' && Timer.state !== 'paused') return;
+      if (Timer.horaInicio) {
+        const rest = Timer.state === 'counting' && Timer.endTs ? Math.max(0, Timer.endTs - Date.now()) : Timer.remainingMs;
+        Timer.horaFim = new Date(); Timer.tipoFim = 'fim'; Timer.rodadoMs = Timer.durationMs - rest;
+        ctRegistrar();
+      }
+      clearInterval(Timer.countdownId); Timer.countdownId = null;
+      Timer.state = 'idle'; Timer.endTs = null; Timer.remainingMs = 0;
+      ctUpdateHorarios(); ctAplicarVisual();
+      showStatus('✅ Sessão finalizada e salva');
+    }
+
+    ctEl.input.addEventListener('input', ctUpdateResult);
+    ctEl.timerBtn.addEventListener('click', () => {
+      if (Timer.state === 'idle') { const m = ctUpdateResult(); if (m > 0) ctIniciar(m); }
+      else if (Timer.state === 'counting' || Timer.state === 'paused') ctCancelar();
+      else if (Timer.state === 'ringing') ctPararAlarme();
+    });
+    ctEl.pauseBtn.addEventListener('click', () => { if (Timer.state === 'counting') ctPausar(); else if (Timer.state === 'paused') ctRetomar(); });
+    ctEl.finishBtn.addEventListener('click', ctFinalizar);
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && Timer.state === 'counting') ctUpdateStatus(); });
+    window.addEventListener('focus', () => { if (Timer.state === 'counting') ctUpdateStatus(); });
+
+    /* ===== ORÇAMENTO ===== */
+    const setupModal = document.getElementById('orcSetupModal');
+    const setupOs = document.getElementById('setupOs');
+    const setupVeiculo = document.getElementById('setupVeiculo');
+    const setupVeiculoDrop = document.getElementById('setupVeiculoDrop');
+    const btnConfirmSetup = document.getElementById('btnConfirmSetup');
+
+    function openSetupModal() { setupOs.value = els.orcOsNumero.value || ''; setupVeiculo.value = els.orcVeiculoInput.value || ''; updateConfirmSetupBtn(); setupModal.classList.remove('hidden'); setTimeout(() => setupOs.focus(), 100); }
+    function closeSetupModal() { setupModal.classList.add('hidden'); }
+    function updateConfirmSetupBtn() { btnConfirmSetup.disabled = !(setupOs.value.trim() && setupVeiculo.value.trim()); }
+    function showSetupVeiculoDrop(q) {
+      if (!q.trim()) { setupVeiculoDrop.classList.remove('open'); return; }
+      const list = (AppState.cache.veiculos || []).filter(v => normalizeText(v.nome).includes(normalizeText(q)));
+      if (!list.length) { setupVeiculoDrop.innerHTML = '<div class="cd-empty">Nenhum veículo</div>'; setupVeiculoDrop.classList.add('open'); return; }
+      setupVeiculoDrop.innerHTML = list.map(v => `<div class="cd-opt" data-nome="${v.nome.replace(/"/g, '&quot;')}"><span class="cd-opt-main">${v.nome}</span></div>`).join('');
+      setupVeiculoDrop.querySelectorAll('.cd-opt').forEach(opt => {
+        opt.addEventListener('mousedown', e => { e.preventDefault(); setupVeiculo.value = opt.dataset.nome; setupVeiculoDrop.classList.remove('open'); updateConfirmSetupBtn(); });
+      });
+      setupVeiculoDrop.classList.add('open');
+    }
+    setupOs.addEventListener('input', updateConfirmSetupBtn);
+    setupVeiculo.addEventListener('input', () => { showSetupVeiculoDrop(setupVeiculo.value); updateConfirmSetupBtn(); });
+    setupVeiculo.addEventListener('blur', () => setTimeout(() => setupVeiculoDrop.classList.remove('open'), 150));
+    document.getElementById('btnCancelSetup').addEventListener('click', () => { closeSetupModal(); if (!els.orcOsNumero.value || !els.orcVeiculoInput.value) setActivePage('dashboard'); });
+    btnConfirmSetup.addEventListener('click', () => {
+      const os = setupOs.value.trim(), vei = setupVeiculo.value.trim();
+      if (!os || !vei) return;
+      els.orcOsNumero.value = os; els.orcVeiculoInput.value = vei;
+      updateInfoBar(); els.btnEditSetup.style.display = 'inline-flex'; closeSetupModal();
+    });
+    els.btnEditSetup.addEventListener('click', openSetupModal);
+
+    function updateInfoBar() {
+      const os = els.orcOsNumero.value.trim(), vei = els.orcVeiculoInput.value.trim();
+      if (!os && !vei) { els.orcInfoBar.classList.add('hidden'); return; }
+      els.orcInfoBar.classList.remove('hidden');
+      els.orcInfoOs.textContent = os ? `OS ${os}` : '';
+      els.orcInfoVeiculo.textContent = vei ? `🚗 ${vei}` : '';
+    }
+    function onEnterOrcamentos() {
+      updateInfoBar();
+      if (!els.orcOsNumero.value || !els.orcVeiculoInput.value) openSetupModal();
+      else els.btnEditSetup.style.display = 'inline-flex';
+    }
+
+    els.orcServicoInput.addEventListener('input', () => {
+      const q = normalizeText(els.orcServicoInput.value);
+      if (!q) { els.dropdownOrcServico.classList.remove('open'); return; }
+      const veiNorm = normalizeText(els.orcVeiculoInput.value.trim());
+      const idsAdded = new Set(Orc.servicosAdicionados.map(s => s.id));
+      const itens = (AppState.cache.itens || []).filter(it => normalizeText(it.veiculo) === veiNorm && !idsAdded.has(it.id) && normalizeText(itemDescricao(it)).includes(q));
+      const produtos = (AppState.cache.produtos || []).filter(p => !idsAdded.has(p.id) && normalizeText(p.nome).includes(q));
+      const kits = (AppState.cache.kits || []).filter(k => Array.isArray(k.componentes) && normalizeText(k.nome).includes(q));
+      const items = [
+        ...itens.map(it => ({ main: itemDescricao(it), sub: `Item · ${fmtTempo(it.tempo || 0)}h · ${it.tpr || ''}`, data: it, tipo: 'item' })),
+        ...produtos.map(p => ({ main: '🧰 ' + p.nome, sub: 'Produto', data: p, tipo: 'produto' })),
+        ...kits.map(k => ({ main: '📦 ' + k.nome, sub: `Kit · ${k.componentes.length} componente(s)`, data: k, tipo: 'kit' }))
+      ];
+      buildCustomDropdown(els.dropdownOrcServico, items, item => {
+        if (item.tipo === 'kit') {
+          let added = 0;
+          (item.data.componentes || []).forEach(c => {
+            if (c.tipo === 'produto') {
+              const prod = (AppState.cache.produtos || []).find(p => p.id === c.id) || c;
+              const ex = Orc.servicosAdicionados.find(s => s.id === c.id);
+              if (ex) ex.quantidade = (ex.quantidade || 1) + 1;
+              else Orc.servicosAdicionados.push({ id: c.id, descricao: prod.nome || c.nome, tempo: 0, tpr: '', isProduto: true, quantidade: 1 });
+              added++;
+            } else if (c.tipo === 'item') {
+              const it = (AppState.cache.itens || []).find(i => i.id === c.id);
+              if (it && !Orc.servicosAdicionados.find(s => s.id === it.id)) {
+                Orc.servicosAdicionados.push({ id: it.id, descricao: c.nome, tempo: parseFloat(it.tempo) || 0, tpr: it.tpr || '', pecas: (it.componentes || []).map(x => typeof x === 'string' ? { nome: x, quantidade: 1 } : { nome: x.nome || '', quantidade: x.quantidade || 1 }), isProduto: false, quantidade: 1 });
+                added++;
+              }
+            }
+          });
+          renderOrcamentoList();
+          if (added > 0) showStatus(`Kit "${item.data.nome}" adicionado!`);
+        } else if (item.tipo === 'produto') {
+          const p = item.data, ex = Orc.servicosAdicionados.find(s => s.id === p.id);
+          if (ex) ex.quantidade = (ex.quantidade || 1) + 1;
+          else Orc.servicosAdicionados.push({ id: p.id, descricao: p.nome, tempo: 0, tpr: '', isProduto: true, quantidade: 1 });
+          renderOrcamentoList();
+        } else {
+          const it = item.data;
+          if (!Orc.servicosAdicionados.find(s => s.id === it.id)) {
+            Orc.servicosAdicionados.push({ id: it.id, descricao: itemDescricao(it), tempo: parseFloat(it.tempo) || 0, tpr: it.tpr || '', pecas: (it.componentes || []).map(x => typeof x === 'string' ? { nome: x, quantidade: 1 } : { nome: x.nome || '', quantidade: x.quantidade || 1 }), isProduto: false, quantidade: 1 });
+            renderOrcamentoList();
+          } else showStatus('Item já adicionado');
+        }
+        els.orcServicoInput.value = '';
+        els.dropdownOrcServico.classList.remove('open');
+        setTimeout(() => els.orcServicoInput.focus(), 50);
+      });
+    });
+    document.addEventListener('click', e => { if (!e.target.closest('#page-orcamentos') && !e.target.closest('#dropdownOrcServico')) els.dropdownOrcServico.classList.remove('open'); });
+
+    function buildCustomDropdown(dropdown, items, onSelect) {
+      dropdown.innerHTML = '';
+      if (items.length === 0) { dropdown.innerHTML = '<div class="cd-empty">Nenhum resultado</div>'; dropdown.classList.add('open'); return; }
+      items.forEach(item => {
+        const opt = document.createElement('div');
+        opt.className = 'cd-opt';
+        opt.innerHTML = `<span class="cd-opt-main">${item.main}</span>${item.sub ? `<span class="cd-opt-sub">${item.sub}</span>` : ''}`;
+        opt.addEventListener('click', () => onSelect(item));
+        dropdown.appendChild(opt);
+      });
+      dropdown.classList.add('open');
+    }
+
+    window.incrementarProdutoOrc = i => { const s = Orc.servicosAdicionados[i]; if (s) { s.quantidade = (s.quantidade || 1) + 1; renderOrcamentoList(); } };
+    window.decrementarProdutoOrc = i => { const s = Orc.servicosAdicionados[i]; if (!s) return; if ((s.quantidade || 1) <= 1) Orc.servicosAdicionados.splice(i, 1); else s.quantidade -= 1; renderOrcamentoList(); };
+    window.removerServicoOrc = i => { Orc.servicosAdicionados.splice(i, 1); Orc.pecasPainelAberto = {}; renderOrcamentoList(); };
+    window.incrementarPecaOrc = (i, p) => { const s = Orc.servicosAdicionados[i]; if (!s) return; s.pecas = normalizarPecas(s.pecas); if (s.pecas[p]) { s.pecas[p].quantidade = (s.pecas[p].quantidade || 1) + 1; renderOrcamentoList(); } };
+    window.decrementarPecaOrc = (i, p) => { const s = Orc.servicosAdicionados[i]; if (!s) return; s.pecas = normalizarPecas(s.pecas); if (s.pecas[p]) { const q = s.pecas[p].quantidade || 1; if (q > 1) s.pecas[p].quantidade = q - 1; renderOrcamentoList(); } };
+    window.togglePecasPanel = i => { Orc.pecasPainelAberto[i] = !Orc.pecasPainelAberto[i]; renderOrcamentoList(); };
+    window.alterarTempoServico = (i, v) => { const s = Orc.servicosAdicionados[i]; if (!s) return; const t = parseDecimalBR(v); s.tempo = t < 0 ? 0 : t; renderOrcamentoList(); };
+
+    function renderOrcamentoList() {
+      const list = els.orcListaServicos;
+      list.innerHTML = '';
+      if (Orc.servicosAdicionados.length === 0) { els.orcTotalTempo.textContent = '0'; els.orcTotalValor.textContent = 'R$ 0,00'; return; }
+      const hdr = document.createElement('div');
+      hdr.className = 'orc-added-header';
+      hdr.innerHTML = `<span>📋 Orçamento</span><span class="orc-count-badge">${Orc.servicosAdicionados.length}</span>`;
+      list.appendChild(hdr);
+
+      let totalTempo = 0;
+      for (let i = Orc.servicosAdicionados.length - 1; i >= 0; i--) {
+        const s = Orc.servicosAdicionados[i];
+        const qtd = s.quantidade || 1;
+        const tempoItem = (parseFloat(s.tempo) || 0) * qtd;
+        totalTempo += tempoItem;
+        const pecas = normalizarPecas(s.pecas);
+        const painelAberto = !!Orc.pecasPainelAberto[i];
+        const temPecas = pecas.length > 0;
+        const item = document.createElement('div');
+        item.className = 'placeholder-item';
+        item.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+            <div style="flex:1;min-width:0;">
+              <div class="placeholder-title" style="font-size:.95rem;">${qtd > 1 ? `<strong>${qtd}x</strong> ` : ''}${s.descricao}</div>
+              ${!s.isProduto && pecas.length > 1 ? `<div class="placeholder-sub" style="font-size:.74rem;margin-top:4px;">${pecas.filter(p => normalizeText(p.nome) !== normalizeText(s.descricao)).map(p => `${p.quantidade > 1 ? p.quantidade + 'x ' : ''}${p.nome}`).join(', ')}</div>` : ''}
+              ${(tempoItem > 0 || s.tpr) ? `<div class="placeholder-sub" style="font-size:.74rem;margin-top:4px;">${s.tpr ? 'TPR: ' + s.tpr : ''}${s.tpr && tempoItem > 0 ? ' · ' : ''}${tempoItem > 0 ? fmtTempo(tempoItem) + 'h' : ''}</div>` : ''}
+            </div>
+            <div style="display:flex;gap:4px;flex-shrink:0;">
+              ${s.isProduto ? `
+                <button onclick="decrementarProdutoOrc(${i})" style="width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:rgba(234,67,53,.08);color:#ea4335;font-weight:900;cursor:pointer;">−</button>
+                <span style="min-width:20px;text-align:center;font-weight:900;font-size:.85rem;color:var(--primary);align-self:center;">${qtd}</span>
+                <button onclick="incrementarProdutoOrc(${i})" style="width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:rgba(26,115,232,.08);color:var(--primary);font-weight:900;cursor:pointer;">+</button>
+              ` : (temPecas ? `<button class="action-icon ${painelAberto ? 'active' : ''}" onclick="togglePecasPanel(${i})" title="Ajustar">⚙️</button>` : '')}
+              <button class="action-icon" onclick="removerServicoOrc(${i})" title="Remover">➖</button>
+            </div>
+          </div>
+          ${painelAberto && temPecas ? `
+            <div style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);">
+              <div style="font-size:.72rem;font-weight:800;color:var(--text-lighter);margin-bottom:6px;">PEÇAS</div>
+              ${pecas.map((p, pi) => `
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 0;">
+                  <span style="font-size:.82rem;flex:1;">${p.quantidade > 1 ? p.quantidade + 'x ' : ''}${p.nome}</span>
+                  <div style="display:flex;align-items:center;gap:4px;">
+                    <button onclick="decrementarPecaOrc(${i},${pi})" style="width:22px;height:22px;border-radius:6px;border:1px solid var(--border);background:rgba(234,67,53,.08);color:#ea4335;font-weight:900;cursor:pointer;font-size:.75rem;">−</button>
+                    <span style="min-width:18px;text-align:center;font-weight:900;font-size:.8rem;color:var(--primary);">${p.quantidade}</span>
+                    <button onclick="incrementarPecaOrc(${i},${pi})" style="width:22px;height:22px;border-radius:6px;border:1px solid var(--border);background:rgba(26,115,232,.08);color:var(--primary);font-weight:900;cursor:pointer;font-size:.75rem;">+</button>
+                  </div>
+                </div>
+              `).join('')}
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);">
+                <label style="font-size:.78rem;font-weight:700;color:var(--text-lighter);">Tempo (h)</label>
+                <input type="text" inputmode="decimal" value="${fmtTempo(parseFloat(s.tempo) || 0)}" onchange="alterarTempoServico(${i}, this.value)" style="width:80px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:.8rem;font-weight:700;text-align:center;" />
+              </div>
+            </div>
+          ` : ''}
+        `;
+        list.appendChild(item);
+      }
+      const valMO = totalTempo * AppState.maoDeObra;
+      const valP = Orc.servicosAdicionados.filter(s => s.isProduto && s.valor != null).reduce((a, s) => a + (parseFloat(s.valor) || 0) * (s.quantidade || 1), 0);
+      els.orcTotalTempo.textContent = fmtTempo(totalTempo);
+      els.orcTotalValor.textContent = fmtBRL(valMO + valP);
+    }
+
+    async function salvarOrcamento() {
+      if (!AppState.uid) { showStatus('Faça login primeiro'); return false; }
+      const os = parseInt(els.orcOsNumero.value.trim()) || 0;
+      const vei = els.orcVeiculoInput.value.trim();
+      const servicos = Orc.servicosAdicionados;
+      if (!os || !vei) { showStatus('⚠️ Informe OS e veículo'); openSetupModal(); return false; }
+      if (servicos.length === 0) { showStatus('⚠️ Adicione ao menos um item'); return false; }
+      const totalTempo = servicos.reduce((a, s) => a + (parseFloat(s.tempo) || 0) * (s.quantidade || 1), 0);
+      const valMO = totalTempo * AppState.maoDeObra;
+      const valP = servicos.filter(s => s.isProduto && s.valor != null).reduce((a, s) => a + (parseFloat(s.valor) || 0) * (s.quantidade || 1), 0);
+      const totalValor = valMO + valP;
+      const serial = s => { const q = s.quantidade || 1; const tempoTotal = (parseFloat(s.tempo) || 0) * q; return { id: s.id, descricao: (s.isProduto && q > 1 ? q + 'x ' : '') + s.descricao, descricaoBase: s.descricao, quantidade: q, tempo: tempoTotal, tempoUnitario: parseFloat(s.tempo) || 0, tpr: s.tpr || '', pecas: s.pecas || [], isProduto: !!s.isProduto, ...(s.valor != null ? { valor: s.valor } : {}) }; };
+      try {
+        const uid = AppState.uid, now = new Date().toISOString();
+        const q = query(collection(db, 'usuarios', uid, 'historico'), where('os', '==', os), where('veiculo', '==', vei));
+        const snap = await getDocs(q);
+        if (!snap.empty && !_isMine(snap.docs[0].data())) { showStatus('⚠️ Esta OS/veículo já existe em outra conta.'); return false; }
+        if (!snap.empty) {
+          const ref = snap.docs[0].ref, exist = snap.docs[0].data();
+          const servFin = AppState.editingHistoricoId ? servicos.map(serial) : (() => {
+            const ex = exist.servicos || [];
+            const ids = new Set(ex.map(s => s.id));
+            const atuais = new Map(servicos.filter(s => s.id).map(s => [s.id, s]));
+            return [...ex.map(se => { const at = atuais.get(se.id); if (!at) return se; const ser = serial(at); if (ser.valor == null && se.valor != null) ser.valor = se.valor; return ser; }), ...servicos.filter(s => !ids.has(s.id)).map(serial)];
+          })();
+          const novoTT = servFin.reduce((a, s) => a + (parseFloat(s.tempo) || 0), 0);
+          const novoMO = novoTT * AppState.maoDeObra;
+          const novoP = servFin.filter(s => s.isProduto && s.valor != null).reduce((a, s) => a + (parseFloat(s.valor) || 0) * (s.quantidade || 1), 0);
+          await setDoc(ref, { os, veiculo: vei, servicos: servFin, totalTempo: novoTT, totalValor: novoMO + novoP, criadoPor: exist.criadoPor || uid, data: exist.data || now, criadoEm: exist.criadoEm || now, atualizadoEm: now });
+          showStatus('✅ Orçamento atualizado');
+        } else {
+          await addDoc(collection(db, 'usuarios', uid, 'historico'), { os, veiculo: vei, servicos: servicos.map(serial), totalTempo, totalValor, criadoPor: uid, data: now, criadoEm: now });
+          showStatus('✅ Orçamento salvo');
+        }
+        const qR = query(collection(db, 'usuarios', uid, 'registros'), where('os', '==', os), where('veiculo', '==', vei));
+        const snapR = await getDocs(qR);
+        if (snapR.empty) {
+          await addDoc(collection(db, 'usuarios', uid, 'registros'), { os, veiculo: vei, valor: totalValor, status: 'servico', tipoServico: 'Serviço', consultor: '', complementar: 0, criadoPor: uid, data: now.substring(0, 10), dataEntrada: now.substring(0, 10), criadoEm: now });
+        } else {
+          const rDoc = snapR.docs[0], rData = rDoc.data();
+          if (!_isMine(rData)) { AppState.editingHistoricoId = null; return true; }
+          if (rData.status !== 'finalizado') await setDoc(rDoc.ref, { valor: totalValor, criadoPor: rData.criadoPor || uid }, { merge: true });
+        }
+        AppState.editingHistoricoId = null;
+        return true;
+      } catch (e) { console.error(e); showStatus('Erro: ' + e.message); return false; }
+    }
+
+    function limparOrcamento() {
+      els.orcOsNumero.value = ''; els.orcVeiculoInput.value = ''; els.orcServicoInput.value = '';
+      Orc.servicosAdicionados = []; Orc.pecasPainelAberto = {}; AppState.editingHistoricoId = null;
+      updateInfoBar(); els.btnEditSetup.style.display = 'none'; renderOrcamentoList(); openSetupModal();
+    }
+    document.getElementById('btnOrcSaveOnly').addEventListener('click', () => salvarOrcamento());
+    document.getElementById('btnOrcSaveClear').addEventListener('click', async () => { const ok = await salvarOrcamento(); if (ok) limparOrcamento(); });
+
+    /* ===== HISTÓRICO ===== */
+    const _getReg = h => AppState.cache.registros.find(r => String(r.os).trim() === String(h.os).trim() && normalizeText(r.veiculo) === normalizeText(h.veiculo) && _isMine(r));
+
+    function renderHistorico() {
+      const all = (AppState.cache.historico || []).filter(_isMine);
+      const term = normalizeText(els.historicoSearch.value);
+      let filtered = all;
+
+      if (term) {
+        filtered = all.filter(h =>
+          normalizeText(String(h.os || '')).includes(term) ||
+          normalizeText(h.veiculo || '').includes(term) ||
+          (h.servicos || []).some(s => normalizeText(s.descricao || '').includes(term))
+        );
+      }
+
+      // 🔽 Ordena do mais recente (criado por último) para o mais antigo
+      filtered = [...filtered].sort((a, b) => {
+        const da = new Date(a.criadoEm || a.data || 0).getTime() || 0;
+        const db = new Date(b.criadoEm || b.data || 0).getTime() || 0;
+        return db - da;
+      });
+
+      els.histCount.textContent = filtered.length;
+      els.historicoSearchInfo.textContent = term
+        ? `${filtered.length} de ${all.length} orçamento(s).`
+        : `${all.length} orçamento(s) seus.`;
+
+      els.listaHistorico.innerHTML = '';
+
+      if (filtered.length === 0) {
+        els.listaHistorico.innerHTML = `<div class="empty-state"><div class="empty-icon">📂</div><div>${term ? '🔍 Nenhum resultado' : 'Você ainda não tem orçamentos salvos'}</div></div>`;
+        return;
+      }
+
+      filtered.forEach(h => {
+        const div = document.createElement('div');
+        div.className = 'placeholder-item';
+        const reg = _getReg(h);
+        const finalizado = reg && reg.status === 'finalizado';
+        const tags = (h.servicos || []).map(s => `<span class="tag">${s.isProduto ? '🧰 ' : ''}${(s.quantidade || 1) > 1 ? (s.quantidade || 1) + 'x ' : ''}${s.descricaoBase || s.descricao || ''}</span>`).join('');
+        const dateStr = h.criadoEm || h.data ? new Date(h.criadoEm || h.data).toLocaleDateString('pt-BR') : '';
+        div.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+            <div style="flex:1;min-width:0;">
+              <div class="placeholder-title">OS ${h.os} — ${h.veiculo} ${finalizado ? '<span style="font-size:.7rem;color:var(--success);font-weight:800;margin-left:4px;">✓ Finalizado</span>' : ''}</div>
+              <div class="placeholder-sub">${(h.servicos || []).length} serviço(s) · ${fmtBRL(h.totalValor || 0)}</div>
+            </div>
+            <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;">
+              <button class="action-icon" data-share title="Compartilhar no WhatsApp">📲</button>
+              <button class="action-icon" data-edit title="Editar">✏️</button>
+              <button class="action-icon" data-del title="Excluir">🗑️</button>
+              ${!finalizado ? '<button class="action-icon" data-fin title="Finalizar OS" style="background:#1a73e8;color:#fff;">🏁</button>' : ''}
+            </div>
+          </div>
+          <div class="tag-row" style="margin-top:8px;">${dateStr ? `<span class="tag">📅 ${dateStr}</span>` : ''}${tags}</div>
+        `;
+        div.querySelector('[data-share]').addEventListener('click', () => shareConsultorHistorico(h));
+        div.querySelector('[data-edit]').addEventListener('click', () => editarOrcamento(h));
+        div.querySelector('[data-del]').addEventListener('click', () => excluirOrcamento(h));
+        const finBtn = div.querySelector('[data-fin]');
+        if (finBtn) finBtn.addEventListener('click', () => finalizarFromHistorico(h));
+        els.listaHistorico.appendChild(div);
+      });
+    }
+    els.historicoSearch.addEventListener('input', renderHistorico);
+
+    async function excluirOrcamento(h) {
+      if (!confirm(`Excluir orçamento OS ${h.os} — ${h.veiculo}?`)) return;
+      try { await deleteDoc(doc(db, 'usuarios', AppState.uid, 'historico', h.id)); showStatus('Excluído'); } catch (e) { showStatus('Erro: ' + e.message); }
+    }
+
+    function editarOrcamento(h) {
+      if (!_isMine(h)) { showStatus('Você não tem permissão para editar este orçamento'); return; }
+      AppState.editingHistoricoId = h.id;
+      els.orcOsNumero.value = h.os || '';
+      els.orcVeiculoInput.value = h.veiculo || '';
+      Orc.servicosAdicionados = (h.servicos || []).map(s => ({ id: s.id || '', descricao: s.descricaoBase || s.descricao || '', tempo: parseFloat(s.tempoUnitario || s.tempo) || 0, tpr: s.tpr || '', pecas: Array.isArray(s.pecas) ? s.pecas : [], isProduto: !!s.isProduto, quantidade: s.quantidade || 1 }));
+      renderOrcamentoList(); updateInfoBar(); els.btnEditSetup.style.display = 'inline-flex';
+      setActivePage('orcamentos');
+      showStatus(`Editando OS ${h.os}`);
+    }
+
+    async function finalizarFromHistorico(h) {
+      if (!_isMine(h)) { showStatus('Você não tem permissão para finalizar este orçamento'); return; }
+      let reg = _getReg(h);
+      if (!reg) {
+        const now = new Date().toISOString();
+        const ref = await addDoc(collection(db, 'usuarios', AppState.uid, 'registros'), { os: parseInt(h.os) || 0, veiculo: h.veiculo, valor: h.totalValor || 0, status: 'pronto', tipoServico: 'Serviço', consultor: '', complementar: 0, criadoPor: AppState.uid, data: now.substring(0, 10), dataEntrada: now.substring(0, 10), criadoEm: now });
+        await new Promise(r => setTimeout(r, 800));
+        reg = AppState.cache.registros.find(r => r.id === ref.id);
+        if (!reg) { showStatus('Aguarde e tente novamente'); return; }
+      }
+      openAprovModal(reg.id);
+    }
+
+    /* ===== SHARE ===== */
+    async function enviarTexto(txt) {
+      if (navigator.share) {
+        try { await navigator.share({ text: txt }); return; } catch (e) { if (e.name === 'AbortError') return; }
+      }
+      window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`, '_blank');
+    }
+
+    function gerarTextoConsultor({ os, veiculo, servicos, totalTempo, totalValor }) {
+      const agora = new Date(), data = agora.toLocaleDateString('pt-BR'), hora = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      const pecasMap = new Map(); const servList = [];
+      (servicos || []).forEach(s => {
+        const q = s.quantidade || 1, nome = s.descricaoBase || s.descricao || '', tU = parseFloat(s.tempoUnitario || s.tempo) || 0;
+        const assoc = normalizarPecas(s.pecas).filter(p => p.nome && normalizeText(p.nome) !== normalizeText(nome));
+        if (s.isProduto) { const k = normalizeText(nome); const ex = pecasMap.get(k); if (ex) ex.quantidade += q; else pecasMap.set(k, { nome, quantidade: q }); assoc.forEach(p => { const k2 = normalizeText(p.nome); const ex2 = pecasMap.get(k2); if (ex2) ex2.quantidade += (p.quantidade || 1) * q; else pecasMap.set(k2, { nome: p.nome, quantidade: (p.quantidade || 1) * q }); }); return; }
+        servList.push({ nome, tpr: s.tpr || '', tempo: tU * q });
+        assoc.forEach(p => { const k = normalizeText(p.nome); const ex = pecasMap.get(k); if (ex) ex.quantidade += (p.quantidade || 1) * q; else pecasMap.set(k, { nome: p.nome, quantidade: (p.quantidade || 1) * q }); });
+      });
+      const SEP = '---';
+      let t = `🛠️ *ORÇAMENTO | OS: ${os}*\n🚙 *Veículo:* ${veiculo}\n📅 *Data:* ${data} | *Hora:* ${hora}\n${SEP}\n`;
+      const pecasList = [...pecasMap.values()];
+      if (pecasList.length) { t += `🔩 *PEÇAS:*\n`; pecasList.forEach((p, i) => t += `${i + 1}. ${p.nome}${p.quantidade > 1 ? ` (${p.quantidade} un)` : ''}\n`); t += SEP + '\n'; }
+      if (servList.length) { t += `⚙️ *SERVIÇOS:*\n`; servList.forEach((s, i) => { t += `${i + 1}. ${s.nome}\n`; if (s.tpr) t += `   • TPR: ${s.tpr}\n`; if (s.tempo > 0) t += `   • Tempo: ${fmtTempo(s.tempo)}h\n`; }); }
+      t += `${SEP}\n⏱️ *Tempo Total:* ${fmtTempo(totalTempo)}h\n💰 *Total:* ${fmtBRL(totalValor)}`;
+      return t;
+    }
+
+    function shareConsultorAtual() {
+      const tT = Orc.servicosAdicionados.reduce((a, s) => a + (parseFloat(s.tempo) || 0) * (s.quantidade || 1), 0);
+      const vMO = tT * AppState.maoDeObra;
+      const vP = Orc.servicosAdicionados.filter(s => s.isProduto && s.valor != null).reduce((a, s) => a + (parseFloat(s.valor) || 0) * (s.quantidade || 1), 0);
+      const texto = gerarTextoConsultor({
+        os: els.orcOsNumero.value,
+        veiculo: els.orcVeiculoInput.value,
+        servicos: Orc.servicosAdicionados.map(s => ({ ...s, tempoUnitario: parseFloat(s.tempo) || 0 })),
+        totalTempo: tT,
+        totalValor: vMO + vP
+      });
+      enviarTexto(texto);
+    }
+
+    function shareConsultorHistorico(h) {
+      const servicos = (h.servicos || []).map(s => ({ ...s, tempoUnitario: parseFloat(s.tempoUnitario || s.tempo) || 0 }));
+      const totalTempo = h.totalTempo || servicos.reduce((a, s) => a + (parseFloat(s.tempoUnitario || s.tempo) || 0) * (s.quantidade || 1), 0);
+      const texto = gerarTextoConsultor({
+        os: h.os,
+        veiculo: h.veiculo,
+        servicos,
+        totalTempo,
+        totalValor: h.totalValor || 0
+      });
+      enviarTexto(texto);
+    }
+
+    document.getElementById('btnOrcShare').addEventListener('click', shareConsultorAtual);
+
+    /* ===== PRODUTIVIDADE ===== */
+    const CT_REF = { 'dia-sem': { disp: 8, aplic: 7, fat: 7.5, label: 'Dia útil — jornada de 8h' }, 'semana': { disp: 40, aplic: 34, fat: 40, label: 'Semana completa — 5 dias × 8h' }, 'mes': { disp: 160, aplic: 136, fat: 160, label: 'Mês — 40h/sem × 4 semanas' } };
+    let prodMode = 'dia-sem';
+    function renderProdutividade() {
+      const r = CT_REF[prodMode];
+      document.getElementById('pCtxLabel').textContent = r.label;
+      document.getElementById('pInputsArea').innerHTML = `
+        <div class="p-input-row"><span class="p-input-lbl">⏱️ Horas disponíveis<small>Inventário</small></span><input type="number" id="pDisp" min="0.5" max="999" step="0.5" value="${r.disp}" oninput="window._calcProd()"></div>
+        <div class="p-input-row"><span class="p-input-lbl">🔧 Horas aplicadas<small>Trabalhando em OS</small></span><input type="number" id="pAplic" min="0" max="999" step="0.5" value="${r.aplic}" oninput="window._calcProd()"></div>
+        <div class="p-input-row"><span class="p-input-lbl">💰 Horas faturadas<small>TPR vendido</small></span><input type="number" id="pFat" min="0" max="999" step="0.5" value="${r.fat}" oninput="window._calcProd()"></div>
+      `;
+      window._calcProd();
+    }
+    window._calcProd = function () {
+      const disp = parseFloat(document.getElementById('pDisp').value) || 0;
+      const aplic = parseFloat(document.getElementById('pAplic').value) || 0;
+      const fat = parseFloat(document.getElementById('pFat').value) || 0;
+      const area = document.getElementById('pResultsArea');
+      if (disp <= 0) { area.innerHTML = ''; return; }
+      const util = (aplic / disp) * 100, efic = aplic > 0 ? (fat / aplic) * 100 : 0, prod = (fat / disp) * 100;
+      const st = v => v >= 80 && v <= 100 ? 'ok' : v > 100 ? 'warn' : 'low';
+      const stL = v => v >= 80 && v <= 100 ? '✓ meta' : v > 100 ? '↑ acima' : '↓ abaixo';
+      const stC = s => s === 'ok' ? 'c-ok' : s === 'warn' ? 'c-warn' : 'c-low';
+      const bC = s => s === 'ok' ? 'p-bar-ok' : s === 'warn' ? 'p-bar-warn' : 'p-bar-low';
+      const bw = v => Math.min(Math.round(v * 0.714), 100);
+      const pct = v => Math.round(v) + '%';
+      const su = st(util), se = st(efic), sp = st(prod);
+      const card = (l, v, s, f) => `<div class="p-metric-card"><div class="p-label">${l}</div><div class="p-value ${stC(s)}">${pct(v)}</div><div class="p-sub ${stC(s)}">${stL(v)}</div><div class="p-formula">${f}</div></div>`;
+      const bar = (t, f, v, s, h) => `<div style="margin-bottom:14px;"><div style="display:flex;justify-content:space-between;margin-bottom:2px;"><span style="font-size:.82rem;font-weight:600;">${t}</span><span style="font-size:.82rem;font-weight:700;" class="${stC(s)}">${pct(v)}</span></div><div style="font-size:.7rem;color:var(--text-lighter);margin-bottom:4px;">${f}</div><div class="p-bar-wrap"><div class="p-bar-fill ${bC(s)}" style="width:${bw(v)}%"></div><div class="p-bar-mark"></div></div><div class="p-hint" style="font-size:.72rem;margin-top:4px;">${h}</div></div>`;
+      const acts = [];
+      if (util < 80) acts.push({ s:'low', t:`Utilização baixa (${pct(util)}) — ${fmtTempo(disp - aplic)}h ociosas`, x:'Tempo ocioso é inventário perdido. Verifique fila de OS.' });
+      else if (util > 100) acts.push({ s:'warn', t:`Utilização acima de 100% (${pct(util)})`, x:'Confirmar horas extras e lançamentos.' });
+      else acts.push({ s:'ok', t:`Utilização ok (${pct(util)})`, x:'Boa ocupação.' });
+      if (efic < 80) acts.push({ s:'low', t:`Eficiência baixa (${pct(efic)})`, x:'Técnico acima do TPR. Revisar execução.' });
+      else if (efic > 130) acts.push({ s:'warn', t:`Eficiência muito alta (${pct(efic)})`, x:'Confirmar TPR aplicado.' });
+      else acts.push({ s:'ok', t:`Eficiência ok (${pct(efic)})`, x:'Relação equilibrada.' });
+      if (prod < 80) acts.push({ s:'low', t:`Produtividade baixa (${pct(prod)})`, x:`Faltam ${fmtTempo(disp * 0.8 - fat)}h para 80%.` });
+      else acts.push({ s:'ok', t:`Produtividade ok (${pct(prod)})`, x:'Dentro da meta.' });
+      const actsHtml = acts.map(a => `<div class="p-action p-action-${a.s}"><div class="p-action-title ${stC(a.s)}">${a.t}</div><div class="p-action-text">${a.x}</div></div>`).join('');
+      area.innerHTML = `
+        <div class="p-section">Resultado — ${prodMode === 'dia-sem' ? 'Dia útil' : prodMode === 'semana' ? 'Semana' : 'Mês'}</div>
+        <div class="p-grid3">${card('Utilização', util, su, `${fmtTempo(aplic)}h ÷ ${fmtTempo(disp)}h`)}${card('Eficiência', efic, se, `${fmtTempo(fat)}h ÷ ${fmtTempo(aplic)}h`)}${card('Produtividade', prod, sp, `${fmtTempo(fat)}h ÷ ${fmtTempo(disp)}h`)}</div>
+        <div class="p-card">${bar('Utilização', `aplicadas ÷ disponíveis`, util, su, `Meta: ${fmtTempo(disp)}h aplicadas.`)}${bar('Eficiência', `faturadas ÷ aplicadas`, efic, se, 'Meta: 100%.')}${bar('Produtividade', `faturadas ÷ disponíveis`, prod, sp, `Piso 80% = ${fmtTempo(disp * 0.8)}h.`)}</div>
+        <div class="p-section">💡 O que fazer agora</div>
+        ${actsHtml}
+      `;
+    };
+    document.querySelectorAll('.p-tab').forEach(tab => tab.addEventListener('click', () => {
+      document.querySelectorAll('.p-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      prodMode = tab.dataset.mode;
+      renderProdutividade();
+    }));
+
+    /* ===== CALC SALÁRIO ===== */
+    const cs = { valorProd: document.getElementById('calcSalValorProduzido'), dias: document.getElementById('calcSalDias'), descanso: document.getElementById('calcSalDescanso'), fixo: document.getElementById('calcSalFixo'), comissao: document.getElementById('calcSalComissao'), imposto: document.getElementById('calcSalImposto'), adiant: document.getElementById('calcSalAdiant'), plano: document.getElementById('calcSalPlano'), outros: document.getElementById('calcSalOutros'), liquido: document.getElementById('calcSalLiquido'), bruto: document.getElementById('calcSalBruto'), descontos: document.getElementById('calcSalDescontos'), ir: document.getElementById('calcSalIR'), inss: document.getElementById('calcSalINSS'), diario: document.getElementById('calcSalDiario'), total: document.getElementById('calcSalTotal') };
+
+    let _vProdNum = 0;
+
+    const CS_FIELDS = ['dias','descanso','fixo','comissao','imposto','adiant','plano','outros'];
+    let _csLoading = false;
+
+    function aplicarCalcSalarioRemoto(uid, d) {
+      if (uid !== AppState.uid) return;
+      const prev = _csLoading; _csLoading = true;
+      CS_FIELDS.forEach(f => { if (d[f] != null) cs[f].value = d[f]; });
+      if (d.valorProd != null) { _vProdNum = parseFloat(d.valorProd) || 0; cs.valorProd.value = formatMoedaBR(_vProdNum); }
+      _lsSet(uid, 'calc_sal', JSON.stringify(d));
+      _csLoading = prev;
+      calcularSalario();
+    }
+
+    async function carregarCalcSalario(uid) {
+      _csLoading = true;
+      CS_FIELDS.forEach(f => { if (cs[f]) cs[f].value = ''; });
+      _vProdNum = 0;
+      if (cs.valorProd) cs.valorProd.value = '0,00';
+
+      try {
+        const raw = _lsGet(uid, 'calc_sal');
+        if (raw) {
+          const d = JSON.parse(raw);
+          CS_FIELDS.forEach(f => { if (d[f] != null) cs[f].value = d[f]; });
+          if (d.valorProd != null) {
+            _vProdNum = parseFloat(d.valorProd) || 0;
+            cs.valorProd.value = formatMoedaBR(_vProdNum);
+          }
+        }
+      } catch(e){}
+
+      try {
+        let snap = await getDoc(doc(db, 'usuarios', uid, 'rascunhos', 'calcSalario'));
+        if (!snap.exists()) snap = await getDoc(doc(db, 'usuarios', uid, 'configuracao', 'calcSalario')); // local antigo (migração)
+        if (snap.exists()) aplicarCalcSalarioRemoto(uid, snap.data() || {});
+      } catch(e){ console.warn('calcSal carregar:', e); }
+
+      _csLoading = false;
+      calcularSalario();
+    }
+
+    let _csSaveTimer = null;
+    function scheduleCalcSalSave() {
+      if (_csLoading) return;
+      clearTimeout(_csSaveTimer);
+      _csSaveTimer = setTimeout(salvarCalcSalario, 500);
+    }
+    function salvarCalcSalario() {
+      if (!AppState.uid || _csLoading) return;
+      const payload = {};
+      CS_FIELDS.forEach(f => payload[f] = cs[f].value || '');
+      payload.valorProd = _vProdNum;
+      payload.deviceId = DEVICE_ID; payload.updatedAt = new Date().toISOString();
+      _lsSet(AppState.uid, 'calc_sal', JSON.stringify(payload));
+      setDoc(doc(db, 'usuarios', AppState.uid, 'rascunhos', 'calcSalario'), payload, { merge: true })
+        .catch(e => console.warn('calcSal salvar:', e));
+    }
+
+    cs.valorProd.addEventListener('input', () => {
+      _vProdNum = parseMoedaBR(cs.valorProd.value);
+      calcularSalario();
+      scheduleCalcSalSave();
+    });
+    cs.valorProd.addEventListener('blur', () => {
+      cs.valorProd.value = formatMoedaBR(_vProdNum);
+      salvarCalcSalario();
+    });
+
+    document.getElementById('btnResetValorProduzido').addEventListener('click', () => {
+      _vProdNum = 0;
+      cs.valorProd.value = '0,00';
+      calcularSalario();
+      salvarCalcSalario();
+      showStatus('Valor zerado');
+    });
+
+    function calcularSalario() {
+      const dias = parseInt(cs.dias.value, 10) || 0, descanso = parseInt(cs.descanso.value, 10) || 0;
+      const fixo = parseFloat(cs.fixo.value) || 0, comissao = parseFloat(cs.comissao.value) || 0, imposto = parseFloat(cs.imposto.value) || 0;
+      const adiant = parseFloat(cs.adiant.value) || 0, plano = parseFloat(cs.plano.value) || 0, outros = parseFloat(cs.outros.value) || 0;
+      const valorReal = _vProdNum - _vProdNum * imposto / 100;
+      const comVal = valorReal * comissao / 100;
+      const gDiario = dias > 0 ? comVal / dias : 0;
+      const bruto = gDiario * (dias + descanso) + fixo;
+
+      // IR somente quando bruto >= R$ 5.000,00
+      const ir = bruto < 5000 ? 0 : bruto * 0.15;
+      const inss = bruto * 0.11;
+      const desc = ir + inss + adiant + plano + outros;
+      const liq = bruto - desc, total = liq + adiant;
+      cs.liquido.textContent = fmtBRL(liq); cs.bruto.textContent = fmtBRL(bruto); cs.descontos.textContent = fmtBRL(desc);
+      cs.ir.textContent = fmtBRL(ir); cs.inss.textContent = fmtBRL(inss); cs.diario.textContent = fmtBRL(gDiario); cs.total.textContent = fmtBRL(total);
+    }
+
+    CS_FIELDS.forEach(k => {
+      cs[k].addEventListener('input', () => { calcularSalario(); scheduleCalcSalSave(); });
+      cs[k].addEventListener('blur', salvarCalcSalario);
+    });
+
+    /* ===== CONFIG ===== */
+    function renderConfig() {
+      document.getElementById('cfgEmail').textContent = AppState.userEmail || '—';
+      document.getElementById('cfgUidInfo').textContent = AppState.uid ? ('UID: ' + AppState.uid) : '—';
+      document.getElementById('cfgNome').value = AppState.userName;
+      document.getElementById('cfgMaoDeObra').value = AppState.maoDeObra;
+      document.getElementById('cfgMeta').value = AppState.meta || '';
+      const st = document.getElementById('cfgUidStatus');
+      const meus = (AppState.cache.historico || []).filter(_isMine);
+      if (AppState.uid) {
+        st.textContent = `✅ ${AppState.cache.veiculos.length} veículos (catálogo ${CATALOGO_UID ? 'compartilhado' : 'individual'}) · ${meus.length} orçamentos seus`;
+        st.style.color = 'var(--success)';
+      } else { st.textContent = '⚠️ Sessão não iniciada.'; st.style.color = 'var(--warning)'; }
+      const cnt = document.getElementById('dangerHistCount');
+      if (cnt) cnt.textContent = meus.length;
+      const btnDel = document.getElementById('btnExcluirTodosOrcamentos');
+      if (btnDel) btnDel.disabled = meus.length === 0;
+    }
+
+    async function salvarConfigUsuario(field, value) {
+      if (!AppState.uid) return;
+      if (field === 'nome') { AppState.userName = value; els.heroName.textContent = value; _lsSet(AppState.uid, 'nome', value); }
+      if (field === 'maoDeObra') { AppState.maoDeObra = value; _lsSet(AppState.uid, 'mao_obra', value); }
+      if (field === 'meta') { AppState.meta = value; _lsSet(AppState.uid, 'meta', value); }
+      try {
+        await setDoc(doc(db, 'usuarios', AppState.uid, 'configuracao', 'geral'), { [field]: value }, { merge: true });
+        showStatus('✅ Salvo e sincronizado');
+      } catch (e) {
+        showStatus('⚠️ Salvo neste aparelho, mas falhou ao sincronizar: ' + e.message, 3500);
+      }
+    }
+
+    document.getElementById('btnSalvarNome').addEventListener('click', () => {
+      const n = document.getElementById('cfgNome').value.trim();
+      if (!n) return;
+      salvarConfigUsuario('nome', n);
+    });
+    document.getElementById('btnSalvarMaoDeObra').addEventListener('click', () => {
+      const v = parseFloat(document.getElementById('cfgMaoDeObra').value) || 0;
+      salvarConfigUsuario('maoDeObra', v);
+    });
+    document.getElementById('btnSalvarMeta').addEventListener('click', () => {
+      const v = parseFloat(document.getElementById('cfgMeta').value) || 0;
+      salvarConfigUsuario('meta', v);
+    });
+
+    /* ===== EXCLUIR TODOS OS ORÇAMENTOS ===== */
+    const excluirModal = document.getElementById('excluirTodosModal');
+    const excluirSenha = document.getElementById('excluirSenha');
+    const excluirSenhaError = document.getElementById('excluirSenhaError');
+    const btnConfirmExcluirTodos = document.getElementById('btnConfirmExcluirTodos');
+    const toggleExcluirSenha = document.getElementById('toggleExcluirSenha');
+
+    toggleExcluirSenha.addEventListener('click', () => {
+      const isPass = excluirSenha.type === 'password';
+      excluirSenha.type = isPass ? 'text' : 'password';
+      toggleExcluirSenha.textContent = isPass ? '🙈' : '👁️';
+    });
+
+    document.getElementById('btnExcluirTodosOrcamentos').addEventListener('click', () => {
+      const meus = (AppState.cache.historico || []).filter(_isMine);
+      if (meus.length === 0) { showStatus('Você não tem orçamentos para excluir'); return; }
+      excluirSenha.value = '';
+      excluirSenha.type = 'password';
+      toggleExcluirSenha.textContent = '👁️';
+      excluirSenhaError.style.display = 'none';
+      btnConfirmExcluirTodos.disabled = false;
+      btnConfirmExcluirTodos.textContent = '🗑️ Excluir tudo';
+      excluirModal.classList.remove('hidden');
+      setTimeout(() => excluirSenha.focus(), 120);
+    });
+
+    document.getElementById('btnCancelExcluirTodos').addEventListener('click', () => { excluirModal.classList.add('hidden'); });
+    excluirModal.addEventListener('click', e => { if (e.target === excluirModal) excluirModal.classList.add('hidden'); });
+    excluirSenha.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); btnConfirmExcluirTodos.click(); } });
+
+    btnConfirmExcluirTodos.addEventListener('click', async () => {
+      const senha = excluirSenha.value;
+      excluirSenhaError.style.display = 'none';
+      if (!senha) { excluirSenhaError.textContent = 'Digite sua senha.'; excluirSenhaError.style.display = 'block'; return; }
+      btnConfirmExcluirTodos.disabled = true;
+      btnConfirmExcluirTodos.textContent = '🔐 Verificando...';
+      try {
+        const user = auth.currentUser;
+        if (!user || !user.email) throw new Error('Usuário não autenticado');
+        const cred = EmailAuthProvider.credential(user.email, senha);
+        await reauthenticateWithCredential(user, cred);
+        btnConfirmExcluirTodos.textContent = '🗑️ Excluindo...';
+        const snap = await getDocs(collection(db, 'usuarios', AppState.uid, 'historico'));
+        const total = snap.size;
+        if (total === 0) { showStatus('Nenhum orçamento para excluir'); excluirModal.classList.add('hidden'); btnConfirmExcluirTodos.disabled = false; btnConfirmExcluirTodos.textContent = '🗑️ Excluir tudo'; return; }
+        let batch = writeBatch(db), count = 0, deleted = 0;
+        for (const d of snap.docs) {
+          batch.delete(d.ref); count++; deleted++;
+          if (count >= 400) { await batch.commit(); batch = writeBatch(db); count = 0; }
+        }
+        if (count > 0) await batch.commit();
+        excluirModal.classList.add('hidden');
+        showStatus(`✅ ${deleted} orçamento(s) excluído(s)`, 3200);
+        renderConfig();
+      } catch (err) {
+        const code = err.code || '';
+        if (code === 'auth/wrong-password' || code === 'auth/invalid-credential' || code === 'auth/invalid-login-credentials') excluirSenhaError.textContent = '❌ Senha incorreta. Tente novamente.';
+        else if (code === 'auth/too-many-requests') excluirSenhaError.textContent = '❌ Muitas tentativas. Aguarde um pouco.';
+        else if (code === 'auth/network-request-failed') excluirSenhaError.textContent = '❌ Falha de rede. Verifique a conexão.';
+        else excluirSenhaError.textContent = '❌ ' + (err.message || 'Erro ao verificar senha');
+        excluirSenhaError.style.display = 'block';
+        excluirSenha.value = '';
+        excluirSenha.focus();
+      } finally {
+        btnConfirmExcluirTodos.disabled = false;
+        btnConfirmExcluirTodos.textContent = '🗑️ Excluir tudo';
+      }
+    });
+
+    /* ===== BACKUP ===== */
+    function setBackupInfo(msg, ok = true) { const el = document.getElementById('backupInfo'); el.style.display = 'block'; el.style.background = ok ? 'rgba(30,142,62,.1)' : 'rgba(234,67,53,.1)'; el.style.color = ok ? '#174ea6' : '#c5221f'; el.innerHTML = msg; }
+    document.getElementById('btnExportJson').addEventListener('click', async () => {
+      if (!AppState.uid) { showStatus('Faça login'); return; }
+      showStatus('Gerando backup...');
+      try {
+        const cols = ['veiculos', 'servicos', 'kits', 'historico', 'registros', 'consultores', 'pecas', 'produtos', 'itens', 'servicosSimples', 'calcTempoHistorico'];
+        const backup = { sistema: 'OficinaPro', versao: '5.0-auth', exportadoEm: new Date().toISOString(), uid: AppState.uid, catalogoUid: catalogOwnerUid(AppState.uid), email: AppState.userEmail, usuario: { nome: AppState.userName, maoDeObra: AppState.maoDeObra, meta: AppState.meta }, dados: {} };
+        for (const col of cols) { try { const snap = await getDocs(colRefFor(AppState.uid, col)); backup.dados[col] = snap.docs.map(d => ({ _id: d.id, ...d.data() })); } catch (e) { backup.dados[col] = []; } }
+        const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = `oficina_backup_${new Date().toISOString().slice(0, 10)}.json`; a.click(); URL.revokeObjectURL(url);
+        const total = Object.values(backup.dados).reduce((a, b) => a + b.length, 0);
+        setBackupInfo(`✅ Backup exportado com <strong>${total} registros</strong>.`);
+        showStatus('✅ Backup exportado');
+      } catch (e) { setBackupInfo('❌ Erro: ' + e.message, false); }
+    });
+    document.getElementById('importJsonFile').addEventListener('change', async e => {
+      const file = e.target.files[0];
+      if (!file || !AppState.uid) return;
+      try {
+        const backup = JSON.parse(await file.text());
+        if (!backup.dados) { setBackupInfo('❌ JSON inválido', false); return; }
+        const total = Object.values(backup.dados).reduce((a, b) => a + b.length, 0);
+        if (!confirm(`Restaurar ${total} registros? Itens com mesmo ID serão substituídos.`)) return;
+        let added = 0, replaced = 0, ignorados = 0;
+        for (const col of Object.keys(backup.dados)) {
+          const items = backup.dados[col] || [];
+          if (!items.length) continue;
+          if (CATALOGO_UID && isCatalogCol(col)) { ignorados += items.length; continue; }
+          const colRef = colRefFor(AppState.uid, col);
+          const existing = await getDocs(colRef);
+          const ids = new Set(existing.docs.map(d => d.id));
+          let batch = writeBatch(db), count = 0;
+          for (const item of items) {
+            const { _id, ...data } = item;
+            const payload = { ...data };
+            if (col === 'historico' || col === 'registros') payload.criadoPor = AppState.uid;
+            const ref = _id ? doc(colRef, _id) : doc(colRef);
+            if (_id && ids.has(_id)) { batch.set(ref, { ...payload, atualizadoEm: new Date().toISOString() }, { merge: true }); replaced++; }
+            else { batch.set(ref, { ...payload, criadoEm: payload.criadoEm || new Date().toISOString() }); added++; }
+            count++; if (count >= 400) { await batch.commit(); batch = writeBatch(db); count = 0; }
+          }
+          if (count) await batch.commit();
+        }
+        setBackupInfo(`✅ Backup restaurado. ${added} adicionados, ${replaced} atualizados.` + (ignorados ? ` ${ignorados} itens de catálogo ignorados (o catálogo compartilhado é gerenciado pelo sistema principal).` : ''));
+        showStatus('✅ Backup restaurado');
+      } catch (e) { setBackupInfo('❌ Erro: ' + e.message, false); }
+      e.target.value = '';
+    });
+
+    /* ===== APROVAÇÃO ===== */
+    let _aprovRegId = null;
+    function openAprovModal(regId) {
+      _aprovRegId = regId;
+      const reg = AppState.cache.registros.find(r => r.id === regId);
+      if (!reg) { showStatus('Registro não encontrado'); return; }
+      if (!_isMine(reg)) { showStatus('Sem permissão'); return; }
+      const hist = (AppState.cache.historico || []).filter(h => String(h.os).trim() === String(reg.os).trim() && normalizeText(h.veiculo) === normalizeText(reg.veiculo) && _isMine(h));
+      hist.sort((a, b) => new Date(b.criadoEm || b.data || 0) - new Date(a.criadoEm || a.data || 0));
+      const orc = hist[0] || null;
+      document.getElementById('aprovSub').textContent = `OS ${reg.os} — ${reg.veiculo}`;
+      const listEl = document.getElementById('aprovList');
+      listEl.innerHTML = '';
+      if (!orc || !orc.servicos || !orc.servicos.length) { listEl.innerHTML = '<div class="empty-state">Nenhum orçamento encontrado.</div>'; }
+      else {
+        const ja = reg.servicosAprovados || [];
+        orc.servicos.forEach((s, i) => {
+          const desc = s.descricaoBase || s.descricao || s.nome || '—', q = s.quantidade || 1;
+          const label = s.isProduto && q > 1 ? `${q}x ${desc}` : desc;
+          const val = s.valor != null ? fmtBRL(s.valor) : '';
+          const sel = ja.includes(i);
+          const div = document.createElement('div');
+          div.className = 'placeholder-item'; div.style.cursor = 'pointer';
+          div.style.background = sel ? 'rgba(66,133,244,.08)' : '';
+          div.style.borderColor = sel ? '#4285f4' : '';
+          div.dataset.idx = i; div.dataset.sel = sel ? '1' : '0';
+          div.innerHTML = `<div style="display:flex;align-items:center;gap:10px;"><div style="width:22px;height:22px;border-radius:6px;border:2px solid ${sel ? '#4285f4' : '#dadce0'};background:${sel ? '#4285f4' : '#fff'};color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0;">${sel ? '✓' : ''}</div><div style="flex:1;"><div style="font-weight:700;font-size:.88rem;">${label}</div>${val ? `<div style="font-size:.75rem;color:var(--text-light);">${val}</div>` : ''}</div></div>`;
+          div.addEventListener('click', () => {
+            const isSel = div.dataset.sel !== '1';
+            div.dataset.sel = isSel ? '1' : '0';
+            div.style.background = isSel ? 'rgba(66,133,244,.08)' : '';
+            div.style.borderColor = isSel ? '#4285f4' : '';
+            const chk = div.querySelector('div > div');
+            chk.style.background = isSel ? '#4285f4' : '#fff';
+            chk.style.borderColor = isSel ? '#4285f4' : '#dadce0';
+            chk.textContent = isSel ? '✓' : '';
+          });
+          listEl.appendChild(div);
+        });
+      }
+      document.getElementById('aprovModal').classList.remove('hidden');
+    }
+    document.getElementById('btnCancelAprov').addEventListener('click', () => { document.getElementById('aprovModal').classList.add('hidden'); _aprovRegId = null; });
+    document.getElementById('btnConfirmAprov').addEventListener('click', async () => {
+      if (!_aprovRegId) return;
+      const reg = AppState.cache.registros.find(r => r.id === _aprovRegId);
+      if (!reg) return;
+      const items = document.querySelectorAll('#aprovList [data-sel="1"]');
+      const idxSel = Array.from(items).map(el => parseInt(el.dataset.idx));
+      const hist = (AppState.cache.historico || []).filter(h => String(h.os).trim() === String(reg.os).trim() && normalizeText(h.veiculo) === normalizeText(reg.veiculo) && _isMine(h));
+      hist.sort((a, b) => new Date(b.criadoEm || b.data || 0) - new Date(a.criadoEm || a.data || 0));
+      const orc = hist[0] || null;
+      const servAprov = orc && orc.servicos ? idxSel.map(i => orc.servicos[i]).filter(Boolean) : [];
+      let valCompl = 0;
+      servAprov.forEach(s => { if (s.valor != null && parseFloat(s.valor) > 0) valCompl += parseFloat(s.valor); else valCompl += (parseFloat(s.tempoUnitario || s.tempo) || 0) * (s.quantidade || 1) * AppState.maoDeObra; });
+      try {
+        await setDoc(doc(db, 'usuarios', AppState.uid, 'registros', _aprovRegId), { status: 'finalizado', servicosAprovados: idxSel, servicosAprovadosNomes: servAprov.map(s => s.descricaoBase || s.descricao || s.nome || ''), complementar: valCompl > 0 ? valCompl : 0, dataFinalizacao: new Date().toISOString() }, { merge: true });
+        showStatus('✅ OS finalizada');
+        document.getElementById('aprovModal').classList.add('hidden'); _aprovRegId = null;
+      } catch (e) { showStatus('Erro: ' + e.message); }
+    });
+    document.getElementById('aprovModal').addEventListener('click', e => { if (e.target.id === 'aprovModal') document.getElementById('btnCancelAprov').click(); });
+
+    /* ===== INIT ===== */
+    function initClock() { function tick() { const n = new Date(); els.headerClock.textContent = String(n.getHours()).padStart(2, '0') + ':' + String(n.getMinutes()).padStart(2, '0'); } tick(); setInterval(tick, 1000); }
+    function initHero() { els.heroName.textContent = AppState.userName; els.heroYear.textContent = new Date().getFullYear(); }
+
+    function boot() { initClock(); initHero(); ctUpdateResult(); calcularSalario(); }
+    boot();
+  </script>
+</body>
+</html>
